@@ -12,9 +12,9 @@ export interface Product {
 export const products: Product[] = [
   {
     name: 'FeedTheFamily',
-    tagline: 'Placeholder tagline for FeedTheFamily.',
-    imagePath: '/images/products/feed-the-family.png',
-    url: 'https://placeholder-ftf-url.com', // TODO: replace with real FeedTheFamily URL
+    tagline: 'Take the mental load out of meal planning.',
+    imagePath: '/images/products/feed-the-family.png', // TODO (SIM-15): add real product image
+    url: 'https://feedthefamily.app/',
     isExternal: true,
   },
 ];
