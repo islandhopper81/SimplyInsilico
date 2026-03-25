@@ -21,15 +21,15 @@ More products will be added as they are rolled out.
 
 ## Project Identity
 
-**Project Name**: <!-- e.g., SimplyInsilico -->
-**Repository**: <!-- github.com/islandhopper81/SimplyInsilico -->
-**Description**: <!-- A website that hosts a information about my LLS. -->
+**Project Name**: SimplyInsilico
+**Repository**: github.com/islandhopper81/SimplyInsilico
+**Description**: Public marketing website for Simply Insilico LLC — AI consulting services and software products for small businesses.
 
 ---
 
 ## Jira
 
-**Project Key**: <!-- e.g., SIM -->
+**Project Key**: SIM
 **Site**: yourstonefamily.atlassian.net
 **Issue Types in Use**: Story, Task, Bug, Spike
 
@@ -69,18 +69,15 @@ Examples:
 ## Test Commands
 
 ```bash
-# Unit tests
-# e.g.: npm run test -- --ci --no-watch
-# e.g.: pytest tests/unit
+# Unit + component tests
+npm run test
 
-# Integration tests (if applicable)
-# e.g.: npm run test:integration
+# Watch mode (during development)
+npm run test:watch
 
-# All tests
-# e.g.: npm run test:all
+# All tests with coverage
+npm run test:coverage
 ```
-
-<!-- Fill in the actual commands for this project -->
 
 ---
 
@@ -202,9 +199,12 @@ scattering them across the codebase.
 
 ## Notes for Claude
 
-<!-- Any project-specific instructions for Claude Code go here.
-     Examples:
-     - "This is a Next.js 14 app using the App Router"
-     - "Use pnpm, not npm"
-     - "Do not modify files in /src/generated — these are auto-generated"
--->
+- This is a **Next.js 14 app using the App Router** (`src/app/` directory)
+- Use **npm** (not pnpm or yarn)
+- Styling is **Tailwind CSS** — do not introduce separate CSS files for new components unless absolutely necessary
+- Animations use **Framer Motion** — use `whileInView` with `viewport={{ once: true }}` for scroll-triggered effects
+- UI components come from **shadcn/ui** — add new components by copying them into `src/components/ui/`, not by installing new component libraries
+- Static content (product list, services list) lives in **`src/data/`** as TypeScript files — update content there, not inline in page components
+- Contact form submissions go through **Formspree** — the endpoint is configured in `src/data/contact.ts`
+- Do not add API routes unless a new feature explicitly requires server-side logic
+- The blog is **out of scope** — do not scaffold blog infrastructure unless specifically asked
