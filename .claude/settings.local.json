@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__claude_ai_Atlassian__getAccessibleAtlassianResources",
+      "mcp__claude_ai_Atlassian_2__getAccessibleAtlassianResources",
+      "mcp__claude_ai_Atlassian_2__getJiraProjectIssueTypesMetadata",
+      "mcp__claude_ai_Atlassian_2__createJiraIssue",
+      "Bash(git -C /c/Users/scott/projects/SimplyInsilico status)"
+    ]
+  }
+}
