@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 160" width="520" height="160">
+  <defs>
+    <style>
+      .wm-light { fill: #1a1a18; }
+      .wm-accent { fill: #0F6E56; }
+      .wm-sub { fill: #888780; }
+      .hub-center { fill: #0F6E56; }
+      .hub-mid { fill: #1D9E75; }
+      .hub-outer { fill: #5DCAA5; }
+      .hub-arc { stroke: #5DCAA5; fill: none; }
+      .hub-line { stroke: #1D9E75; }
+    </style>
+  </defs>
+  <circle cx="72" cy="80" r="52" class="hub-arc" stroke-width="0.8" opacity="0.2" stroke-dasharray="5 5"/>
+  <circle cx="72" cy="80" r="34" class="hub-arc" stroke-width="0.7" opacity="0.15" stroke-dasharray="4 5"/>
+  <line x1="72" y1="80" x2="72"  y2="46"  class="hub-line" stroke-width="1.1" opacity="0.35"/>
+  <line x1="72" y1="80" x2="101" y2="97"  class="hub-line" stroke-width="1.1" opacity="0.35"/>
+  <line x1="72" y1="80" x2="43"  y2="97"  class="hub-line" stroke-width="1.1" opacity="0.35"/>
+  <line x1="72" y1="80" x2="118" y2="52"  class="hub-line" stroke-width="0.8" opacity="0.2"/>
+  <line x1="72" y1="80" x2="122" y2="114" class="hub-line" stroke-width="0.8" opacity="0.2"/>
+  <line x1="72" y1="80" x2="42"  y2="130" class="hub-line" stroke-width="0.8" opacity="0.2"/>
+  <circle cx="72"  cy="46"  r="6.5" class="hub-mid"   opacity="0.9"/>
+  <circle cx="101" cy="97"  r="6.5" class="hub-mid"   opacity="0.9"/>
+  <circle cx="43"  cy="97"  r="6.5" class="hub-mid"   opacity="0.9"/>
+  <circle cx="118" cy="52"  r="4.5" class="hub-outer" opacity="0.65"/>
+  <circle cx="122" cy="114" r="4.5" class="hub-outer" opacity="0.65"/>
+  <circle cx="42"  cy="130" r="4.5" class="hub-outer" opacity="0.65"/>
+  <circle cx="72" cy="80" r="22" class="hub-center" opacity="0.08"/>
+  <circle cx="72" cy="80" r="13" class="hub-center" opacity="0.14"/>
+  <circle cx="72" cy="80" r="7"  class="hub-center" opacity="1"/>
+  <text x="152" y="68"  font-family="Georgia, serif" font-size="38" font-weight="400" letter-spacing="-0.5" class="wm-light">simply</text>
+  <text x="152" y="110" font-family="'Courier New', monospace" font-size="30" font-weight="700" letter-spacing="2" class="wm-accent">insilico</text>
+  <line x1="153" y1="122" x2="510" y2="122" stroke="#B4B2A9" stroke-width="0.6"/>
+  <text x="154" y="139" font-family="Georgia, serif" font-size="10.5" font-weight="400" letter-spacing="4" class="wm-sub">DO MORE WITH AI</text>
+</svg>

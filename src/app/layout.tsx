@@ -17,6 +17,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: 'Simply Insilico',
   description: 'AI consulting and software products for small businesses.',
+  icons: {
+    icon: '/logo-favicon.svg',
+  },
 };
 
 export default function RootLayout({

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 80" width="360" height="80">
+  <defs>
+    <style>
+      .wm-light { fill: #1a1a18; }
+      .wm-accent { fill: #0F6E56; }
+    </style>
+  </defs>
+  <text x="0" y="44"  font-family="Georgia, serif" font-size="38" font-weight="400" letter-spacing="-0.5" class="wm-light">simply</text>
+  <text x="0" y="74" font-family="'Courier New', monospace" font-size="30" font-weight="700" letter-spacing="2" class="wm-accent">insilico</text>
+</svg>

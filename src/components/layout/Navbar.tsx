@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { Menu, X } from 'lucide-react';
@@ -25,9 +26,15 @@ export default function Navbar() {
       <nav className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
 
-          {/* Brand */}
-          <Link href="/" className="text-lg font-semibold text-foreground hover:text-primary transition-colors">
-            Simply Insilico
+          {/* Brand logo */}
+          <Link href="/" className="flex items-center hover:opacity-80 transition-opacity">
+            <Image
+              src="/logo-full.svg"
+              alt="Simply Insilico"
+              width={180}
+              height={55}
+              priority
+            />
           </Link>
 
           {/* Desktop nav links */}
