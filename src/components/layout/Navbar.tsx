@@ -27,14 +27,24 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-16">
 
           {/* Brand logo */}
-          <Link href="/" className="flex items-center hover:opacity-80 transition-opacity">
+          <Link href="/" className="flex items-center gap-2.5 hover:opacity-80 transition-opacity">
             <Image
-              src="/logo-full.svg"
-              alt="Simply Insilico"
-              width={180}
-              height={55}
+              src="/logo-icon.svg"
+              alt=""
+              width={44}
+              height={44}
               priority
             />
+            {/* OPTION 1: Inter light + Inter bold (clean modern) */}
+            {/* <span className="text-2xl leading-none">
+              <span className="font-light text-foreground">simply</span>
+              <span className="font-bold text-primary ml-1">insilico</span>
+            </span> */}
+
+            <span className="text-2xl leading-none">
+              <span className="font-normal text-foreground">simply</span>
+              <span style={{ fontFamily: 'ui-monospace, Menlo, monospace' }} className="font-bold text-primary ml-1">insilico</span>
+            </span>
           </Link>
 
           {/* Desktop nav links */}
