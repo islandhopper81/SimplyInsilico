@@ -49,7 +49,7 @@ describe('Navbar', () => {
 
   it('renders the brand name linking to home', () => {
     render(<Navbar />);
-    const brandLink = screen.getByRole('link', { name: 'Simply Insilico' });
+    const brandLink = screen.getByRole('link', { name: /simplyinsilico/i });
     expect(brandLink).toHaveAttribute('href', '/');
   });
 });
