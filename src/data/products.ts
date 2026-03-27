@@ -13,7 +13,7 @@ export const products: Product[] = [
   {
     name: 'FeedTheFamily',
     tagline: 'Take the mental load out of meal planning.',
-    imagePath: '/images/products/feed-the-family.png', // TODO (SIM-15): add real product image
+    imagePath: '/images/products/feed-the-family.jpg',
     url: 'https://feedthefamily.app/',
     isExternal: true,
   },
