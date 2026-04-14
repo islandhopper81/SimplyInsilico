@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1584 396" width="1584" height="396">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a1f1a;stop-opacity:1" />
+      <stop offset="60%" style="stop-color:#0d2e26;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0F6E56;stop-opacity:0.3" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1584" height="396" fill="url(#bg)"/>
+
+  <!-- Subtle grid lines -->
+  <g stroke="#1D9E75" stroke-width="0.3" opacity="0.08">
+    <line x1="0" y1="66" x2="1584" y2="66"/>
+    <line x1="0" y1="132" x2="1584" y2="132"/>
+    <line x1="0" y1="198" x2="1584" y2="198"/>
+    <line x1="0" y1="264" x2="1584" y2="264"/>
+    <line x1="0" y1="330" x2="1584" y2="330"/>
+    <line x1="264" y1="0" x2="264" y2="396"/>
+    <line x1="528" y1="0" x2="528" y2="396"/>
+    <line x1="792" y1="0" x2="792" y2="396"/>
+    <line x1="1056" y1="0" x2="1056" y2="396"/>
+    <line x1="1320" y1="0" x2="1320" y2="396"/>
+  </g>
+
+  <!-- Large background network graphic (right side) -->
+  <circle cx="1300" cy="198" r="280" stroke="#5DCAA5" fill="none" stroke-width="0.6" opacity="0.06" stroke-dasharray="8 8"/>
+  <circle cx="1300" cy="198" r="200" stroke="#5DCAA5" fill="none" stroke-width="0.5" opacity="0.08" stroke-dasharray="6 7"/>
+  <circle cx="1300" cy="198" r="130" stroke="#5DCAA5" fill="none" stroke-width="0.5" opacity="0.1" stroke-dasharray="5 6"/>
+
+  <!-- Network lines -->
+  <g stroke="#1D9E75" stroke-width="1.2" opacity="0.25">
+    <line x1="1300" y1="198" x2="1300" y2="68"/>
+    <line x1="1300" y1="198" x2="1413" y2="263"/>
+    <line x1="1300" y1="198" x2="1187" y2="263"/>
+    <line x1="1300" y1="198" x2="1430" y2="114"/>
+    <line x1="1300" y1="198" x2="1450" y2="280"/>
+    <line x1="1300" y1="198" x2="1155" y2="320"/>
+    <line x1="1300" y1="198" x2="1170" y2="95"/>
+  </g>
+
+  <!-- Secondary lighter lines -->
+  <g stroke="#1D9E75" stroke-width="0.7" opacity="0.12">
+    <line x1="1300" y1="68" x2="1430" y2="114"/>
+    <line x1="1413" y1="263" x2="1450" y2="280"/>
+    <line x1="1187" y1="263" x2="1155" y2="320"/>
+    <line x1="1170" y1="95" x2="1430" y2="114"/>
+  </g>
+
+  <!-- Large nodes -->
+  <circle cx="1300" cy="68"  r="10" fill="#1D9E75" opacity="0.85"/>
+  <circle cx="1413" cy="263" r="10" fill="#1D9E75" opacity="0.85"/>
+  <circle cx="1187" cy="263" r="10" fill="#1D9E75" opacity="0.85"/>
+
+  <!-- Medium nodes -->
+  <circle cx="1430" cy="114" r="7" fill="#5DCAA5" opacity="0.6"/>
+  <circle cx="1450" cy="280" r="7" fill="#5DCAA5" opacity="0.6"/>
+  <circle cx="1155" cy="320" r="7" fill="#5DCAA5" opacity="0.6"/>
+  <circle cx="1170" cy="95"  r="7" fill="#5DCAA5" opacity="0.6"/>
+
+  <!-- Center node glow -->
+  <circle cx="1300" cy="198" r="28" fill="#0F6E56" opacity="0.12"/>
+  <circle cx="1300" cy="198" r="18" fill="#0F6E56" opacity="0.2"/>
+  <circle cx="1300" cy="198" r="10" fill="#0F6E56" opacity="1"/>
+  <circle cx="1300" cy="198" r="5"  fill="#5DCAA5" opacity="0.9"/>
+
+  <!-- Company name overlaid on right network graphic -->
+  <text x="980" y="185" font-family="Georgia, serif" font-size="64" font-weight="normal" fill="#ffffff" letter-spacing="1" opacity="0.95">Simply Insilico</text>
+
+  <!-- Tagline -->
+  <text x="984" y="232" font-family="Courier New, monospace" font-size="22" fill="#5DCAA5" letter-spacing="3" opacity="0.85">DO MORE WITH AI</text>
+
+</svg>
