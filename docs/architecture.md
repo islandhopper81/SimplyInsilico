@@ -17,6 +17,7 @@
 | Component Library | shadcn/ui | Accessible, unstyled components (Card, Button, Form, Nav) that are copied into the repo — fully owned, Tailwind-native |
 | Contact Form | Formspree | Handles form submissions with no custom backend; routes submissions directly to the owner's email |
 | Hosting | Vercel | Zero-config deployment for Next.js, free tier covers a marketing site, automatic preview deploys on PRs, custom domain support |
+| Analytics | Vercel Analytics | Cookieless, privacy-friendly page view and web vitals tracking; no consent banner required; enabled via `@vercel/analytics` |
 | Testing | Vitest + React Testing Library | Fast, Jest-compatible test runner; RTL for testing component behavior over implementation details |
 
 ## System Design
@@ -114,7 +115,16 @@ SimplyInsilico/
 | `@testing-library/react` | Component testing |
 | `@testing-library/jest-dom` | DOM matchers for tests |
 | `vitest` | Test runner |
+| `@vercel/analytics` | Vercel Analytics script injector for page view and web vitals tracking |
 | `clsx` + `tailwind-merge` | Tailwind class merging utility (used by shadcn/ui) |
+
+## Environment Variables
+
+These must be set in the Vercel project dashboard before deploying. `NEXT_PUBLIC_` variables are baked into the build at compile time — changing them in Vercel requires a redeploy to take effect.
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `NEXT_PUBLIC_FORMSPREE_ENDPOINT` | Yes | The Formspree form endpoint URL (e.g., `https://formspree.io/f/xxxxxxxx`). Found in the Formspree dashboard under your form's integration settings. If this is missing or incorrect, the contact form will silently fail — submissions will POST to a relative URL instead of Formspree. |
 
 ## Architecture Decisions Log
 
