@@ -39,7 +39,7 @@ The site must convey the brand clearly — we build software products for small 
 
 1. **Blog** — listing page and individual post pages for articles to drive organic traffic; deferred to a future release
 2. **`simplyinsilico.ai` domain** — evaluate whether to use this domain as an alias or primary domain once the site is live
-3. **Analytics** — basic page view tracking (e.g., Plausible or Google Analytics) to measure traffic and lead sources
+3. **Analytics** ✅ — implemented via Vercel Analytics (SIM-28); cookieless page view and web vitals tracking active on all pages
 4. **Dark mode** — optional theme toggle
 
 ## Out of Scope
