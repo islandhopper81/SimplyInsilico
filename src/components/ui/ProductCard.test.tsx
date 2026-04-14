@@ -39,4 +39,10 @@ describe('ProductCard', () => {
     expect(link).toHaveAttribute('href', '/test-product');
     expect(link).not.toHaveAttribute('target', '_blank');
   });
+
+  it('sets rel="noopener noreferrer" on external links', () => {
+    render(<ProductCard product={externalProduct} />);
+    const link = screen.getByRole('link', { name: 'FeedTheFamily' });
+    expect(link).toHaveAttribute('rel', 'noopener noreferrer');
+  });
 });

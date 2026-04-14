@@ -51,4 +51,32 @@ describe('ContactForm', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Send message' }));
     await waitFor(() => expect(screen.getByText(/Something went wrong/)).toBeInTheDocument());
   });
+
+  it('disables the submit button and shows "Sending..." during submission', async () => {
+    let resolveSubmit!: (value: unknown) => void;
+    (fetch as ReturnType<typeof vi.fn>).mockReturnValueOnce(
+      new Promise((resolve) => { resolveSubmit = resolve; })
+    );
+
+    render(<ContactForm />);
+    fireEvent.change(screen.getByLabelText('Name'), { target: { value: 'Test User' } });
+    fireEvent.change(screen.getByLabelText('Email'), { target: { value: 'test@example.com' } });
+    fireEvent.change(screen.getByLabelText('Message'), { target: { value: 'Hello there' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Send message' }));
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: 'Sending...' })).toBeDisabled();
+    });
+
+    resolveSubmit({ ok: true });
+  });
+
+  it('clears a field error when the user starts typing in that field', async () => {
+    render(<ContactForm />);
+    fireEvent.click(screen.getByRole('button', { name: 'Send message' }));
+    expect(await screen.findByText('Name is required.')).toBeInTheDocument();
+
+    fireEvent.change(screen.getByLabelText('Name'), { target: { value: 'T' } });
+    expect(screen.queryByText('Name is required.')).not.toBeInTheDocument();
+  });
 });

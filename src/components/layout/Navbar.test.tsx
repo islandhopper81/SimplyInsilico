@@ -52,4 +52,16 @@ describe('Navbar', () => {
     const brandLink = screen.getByRole('link', { name: /simplyinsilico/i });
     expect(brandLink).toHaveAttribute('href', '/');
   });
+
+  it('clicking a mobile nav link closes the mobile menu', () => {
+    render(<Navbar />);
+    fireEvent.click(screen.getByRole('button', { name: 'Open menu' }));
+
+    // When the mobile menu is open, each link appears twice (desktop + mobile).
+    // The mobile link is last in DOM order and has the onClick close handler.
+    const homeLinks = screen.getAllByRole('link', { name: 'Home' });
+    fireEvent.click(homeLinks[homeLinks.length - 1]);
+
+    expect(screen.getByRole('button', { name: 'Open menu' })).toBeInTheDocument();
+  });
 });
