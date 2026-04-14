@@ -16,11 +16,30 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Simply Insilico',
-  description: 'AI consulting and software products for small businesses.',
+  title: {
+    default: 'Simply Insilico | AI Consulting & Software for Small Businesses',
+    template: '%s | Simply Insilico',
+  },
+  description: 'Simply Insilico is a Raleigh, NC AI consulting firm helping small businesses adopt AI — from identifying opportunities to hands-on implementation. We also build practical software products for individuals and small businesses.',
   icons: {
     icon: '/logo-favicon.svg',
   },
+};
+
+const LOCAL_BUSINESS_SCHEMA = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  name: 'Simply Insilico LLC',
+  description: 'AI consulting and software products for small businesses. We help small businesses in Raleigh, NC and beyond adopt AI and get ahead.',
+  url: 'https://www.simplyinsilico.com',
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Raleigh',
+    addressRegion: 'NC',
+    addressCountry: 'US',
+  },
+  areaServed: 'United States',
+  serviceType: ['AI Consulting', 'AI Adoption', 'Bioinformatics Consulting', 'Software Products'],
 };
 
 export default function RootLayout({
@@ -37,6 +56,10 @@ export default function RootLayout({
         </main>
         <Footer />
         <Analytics />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(LOCAL_BUSINESS_SCHEMA) }}
+        />
       </body>
     </html>
   );
