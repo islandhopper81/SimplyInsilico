@@ -1,12 +1,7 @@
-// Social media links are placeholders until accounts are created (see SIM-12).
-// Replace the href values with real URLs when accounts are set up.
-
 import Link from 'next/link';
 
 const SOCIAL_LINKS = [
-  { label: 'LinkedIn', href: '#' },
-  { label: 'GitHub', href: '#' },
-  { label: 'X (Twitter)', href: '#' },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/company/simply-insilico/' },
 ];
 
 const CURRENT_YEAR = new Date().getFullYear();
@@ -29,8 +24,8 @@ export default function Footer() {
                 <Link
                   href={link.href}
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                  target={link.href !== '#' ? '_blank' : undefined}
-                  rel={link.href !== '#' ? 'noopener noreferrer' : undefined}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   aria-label={link.label}
                 >
                   {link.label}
