@@ -37,7 +37,7 @@ The site must convey the brand clearly — we build software products for small 
 
 ## Nice-to-Have Requirements
 
-1. **Blog** — listing page and individual post pages for articles to drive organic traffic; deferred to a future release
+1. **Blog** ✅ — implemented (SIM-25); MDX-based blog with index page, tag filtering, full-text search, individual post pages, RSS feed, and syntax-highlighted code blocks
 2. **`simplyinsilico.ai` domain** — evaluate whether to use this domain as an alias or primary domain once the site is live
 3. **Analytics** ✅ — implemented via Vercel Analytics (SIM-28); cookieless page view and web vitals tracking active on all pages
 4. **Dark mode** — optional theme toggle
@@ -46,7 +46,6 @@ The site must convey the brand clearly — we build software products for small 
 
 - A CMS or admin UI for editing content — content is managed directly in code
 - A custom backend or database for contact form submissions
-- Blog at launch
 - Authentication or user accounts
 - E-commerce or billing
 
