@@ -24,6 +24,11 @@ export const metadata: Metadata = {
   icons: {
     icon: '/logo-favicon.svg',
   },
+  alternates: {
+    types: {
+      'application/rss+xml': '/feed.xml',
+    },
+  },
 };
 
 const LOCAL_BUSINESS_SCHEMA = {

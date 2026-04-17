@@ -39,6 +39,9 @@ yarn-error.log*
 # vercel
 .vercel
 
+# velite generated output
+.velite/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

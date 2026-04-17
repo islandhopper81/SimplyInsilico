@@ -1,8 +1,5 @@
 import Link from 'next/link';
-
-const SOCIAL_LINKS = [
-  { label: 'LinkedIn', href: 'https://www.linkedin.com/company/simply-insilico/' },
-];
+import { Rss } from 'lucide-react';
 
 const CURRENT_YEAR = new Date().getFullYear();
 
@@ -17,21 +14,30 @@ export default function Footer() {
             © {CURRENT_YEAR} Simply Insilico LLC. All rights reserved.
           </p>
 
-          {/* Social media links */}
+          {/* Footer links */}
           <ul className="flex items-center gap-4">
-            {SOCIAL_LINKS.map((link) => (
-              <li key={link.label}>
-                <Link
-                  href={link.href}
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={link.label}
-                >
-                  {link.label}
-                </Link>
-              </li>
-            ))}
+            <li>
+              <Link
+                href="https://www.linkedin.com/company/simply-insilico/"
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="LinkedIn"
+              >
+                LinkedIn
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/feed.xml"
+                className="text-muted-foreground hover:text-foreground transition-colors"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="RSS Feed"
+              >
+                <Rss size={16} />
+              </Link>
+            </li>
           </ul>
 
         </div>
