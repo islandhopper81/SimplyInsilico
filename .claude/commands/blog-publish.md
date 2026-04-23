@@ -1,0 +1,1 @@
+Follow .claude/skills/SKILL_BLOG_PUBLISH.md to publish the blog post from Jira ticket: $ARGUMENTS
