@@ -197,6 +197,12 @@ scattering them across the codebase.
 
 ---
 
+### Skills
+
+- Blog publishing: see `.claude/skills/SKILL_BLOG_PUBLISHING.md`
+
+---
+
 ## Notes for Claude
 
 - This is a **Next.js 14 app using the App Router** (`src/app/` directory)
