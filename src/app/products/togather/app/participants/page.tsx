@@ -2,54 +2,69 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { UserPlus } from 'lucide-react';
+import { UserPlus, Link2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import NavigationGuard from '@/components/togather/NavigationGuard';
 import ParticipantForm from '@/components/togather/ParticipantForm';
 import ParticipantList from '@/components/togather/ParticipantList';
 import CsvImportButton from '@/components/togather/CsvImportButton';
+import AffinityForm from '@/components/togather/AffinityForm';
+import AffinityList from '@/components/togather/AffinityList';
 import { useTogetherStore } from '@/lib/togather/store';
-import type { Participant } from '@/lib/togather/types';
+import type { Affinity, Participant } from '@/lib/togather/types';
 
 function ParticipantsScreen() {
   const router = useRouter();
   const participants = useTogetherStore((state) => state.participants);
+  const affinities = useTogetherStore((state) => state.affinities);
   const addParticipant = useTogetherStore((state) => state.addParticipant);
   const updateParticipant = useTogetherStore((state) => state.updateParticipant);
   const removeParticipant = useTogetherStore((state) => state.removeParticipant);
+  const addAffinity = useTogetherStore((state) => state.addAffinity);
+  const removeAffinity = useTogetherStore((state) => state.removeAffinity);
 
-  function handleCsvImport(imported: Participant[]) {
-    imported.forEach(addParticipant);
-  }
-
-  const [showForm, setShowForm] = useState(false);
+  // Participant form state
+  const [showParticipantForm, setShowParticipantForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
+
+  // Affinity form state
+  const [showAffinityForm, setShowAffinityForm] = useState(false);
 
   const editingParticipant = editingId
     ? participants.find((p) => p.id === editingId) ?? null
     : null;
 
-  function handleSave(participant: Participant) {
+  const isParticipantFormVisible = showParticipantForm || editingId !== null;
+  const manualAffinityCount = affinities.filter((a) => !a.system).length;
+
+  function handleCsvImport(imported: Participant[]) {
+    imported.forEach(addParticipant);
+  }
+
+  function handleParticipantSave(participant: Participant) {
     if (editingId) {
       updateParticipant(editingId, participant);
       setEditingId(null);
     } else {
       addParticipant(participant);
-      setShowForm(false);
+      setShowParticipantForm(false);
     }
   }
 
   function handleEdit(id: string) {
-    setShowForm(false);
+    setShowParticipantForm(false);
     setEditingId(id);
   }
 
-  function handleCancelForm() {
-    setShowForm(false);
+  function handleCancelParticipantForm() {
+    setShowParticipantForm(false);
     setEditingId(null);
   }
 
-  const isFormVisible = showForm || editingId !== null;
+  function handleAffinitySave(affinity: Affinity) {
+    addAffinity(affinity);
+    setShowAffinityForm(false);
+  }
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-10 space-y-8">
@@ -60,10 +75,10 @@ function ParticipantsScreen() {
           <h2 className="text-base font-semibold text-foreground">
             Participants ({participants.length})
           </h2>
-          {!isFormVisible && (
+          {!isParticipantFormVisible && (
             <div className="flex items-center gap-2">
               <CsvImportButton onImport={handleCsvImport} />
-              <Button size="sm" onClick={() => setShowForm(true)}>
+              <Button size="sm" onClick={() => setShowParticipantForm(true)}>
                 <UserPlus size={14} />
                 Add
               </Button>
@@ -71,11 +86,11 @@ function ParticipantsScreen() {
           )}
         </div>
 
-        {isFormVisible && (
+        {isParticipantFormVisible && (
           <ParticipantForm
             initialValues={editingParticipant}
-            onSave={handleSave}
-            onCancel={handleCancelForm}
+            onSave={handleParticipantSave}
+            onCancel={handleCancelParticipantForm}
           />
         )}
 
@@ -86,18 +101,41 @@ function ParticipantsScreen() {
         />
       </section>
 
-      {/* Friendships section — placeholder until SIM-49 */}
+      {/* Friendships section */}
       <section className="space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-base font-semibold text-foreground">
-            Friendships (0)
+            Friendships ({manualAffinityCount})
           </h2>
+          {participants.length >= 2 && !showAffinityForm && (
+            <Button size="sm" variant="outline" onClick={() => setShowAffinityForm(true)}>
+              <Link2 size={14} />
+              Add friendship
+            </Button>
+          )}
         </div>
-        <p className="text-sm text-muted-foreground py-4 text-center">
-          {participants.length === 0
-            ? 'Add participants first.'
-            : 'Friendship entry coming soon.'}
-        </p>
+
+        {participants.length < 2 ? (
+          <p className="text-sm text-muted-foreground py-4 text-center">
+            Add at least two participants to record friendships.
+          </p>
+        ) : (
+          <>
+            {showAffinityForm && (
+              <AffinityForm
+                participants={participants}
+                existingAffinities={affinities}
+                onSave={handleAffinitySave}
+                onCancel={() => setShowAffinityForm(false)}
+              />
+            )}
+            <AffinityList
+              affinities={affinities}
+              participants={participants}
+              onRemove={removeAffinity}
+            />
+          </>
+        )}
       </section>
 
       {/* Navigation */}
