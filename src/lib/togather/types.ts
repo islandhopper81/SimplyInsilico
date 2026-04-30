@@ -54,4 +54,6 @@ export interface TogetherStore extends SessionState {
   applyAlgorithmResult: (groups: Group[]) => void;
   moveParticipant: (participantId: string, toGroupId: string) => void;
   promoteToHeadCoach: (participantId: string, groupId: string) => void;
+  demoteHeadCoach: (groupId: string) => void;
+  renameGroup: (groupId: string, newName: string) => void;
 }
