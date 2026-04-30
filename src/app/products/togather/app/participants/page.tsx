@@ -30,12 +30,16 @@ function ParticipantsScreen() {
   // Affinity form state
   const [showAffinityForm, setShowAffinityForm] = useState(false);
 
+  // Navigation warning state
+  const [showCoachWarning, setShowCoachWarning] = useState(false);
+
   const editingParticipant = editingId
     ? participants.find((p) => p.id === editingId) ?? null
     : null;
 
   const isParticipantFormVisible = showParticipantForm || editingId !== null;
   const manualAffinityCount = affinities.filter((a) => !a.system).length;
+  const hasCoachVolunteer = participants.some((p) => p.willingToCoach);
 
   function handleCsvImport(imported: Participant[]) {
     imported.forEach(addParticipant);
@@ -64,6 +68,18 @@ function ParticipantsScreen() {
   function handleAffinitySave(affinity: Affinity) {
     addAffinity(affinity);
     setShowAffinityForm(false);
+  }
+
+  function handleNextClick() {
+    if (!hasCoachVolunteer) {
+      setShowCoachWarning(true);
+    } else {
+      router.push('/products/togather/app/groups');
+    }
+  }
+
+  function handleProceedAnyway() {
+    router.push('/products/togather/app/groups');
   }
 
   return (
@@ -139,6 +155,27 @@ function ParticipantsScreen() {
         )}
       </section>
 
+      {/* Coach warning */}
+      {showCoachWarning && (
+        <div
+          role="alert"
+          className="rounded-lg border border-amber-200 bg-amber-50 dark:border-amber-800/50 dark:bg-amber-950/20 p-4 space-y-3"
+        >
+          <p className="text-sm text-amber-900 dark:text-amber-200">
+            <span className="font-semibold">No coach volunteers added.</span>{' '}
+            Every group will need a coach — add volunteers before running the algorithm, or proceed and assign coaches manually.
+          </p>
+          <div className="flex gap-2">
+            <Button size="sm" onClick={handleProceedAnyway}>
+              Proceed anyway
+            </Button>
+            <Button size="sm" variant="outline" onClick={() => setShowCoachWarning(false)}>
+              Go back
+            </Button>
+          </div>
+        </div>
+      )}
+
       {/* Navigation */}
       <div className="flex justify-between pt-4 border-t border-border">
         <Button variant="outline" onClick={() => router.push('/products/togather/app/setup')}>
@@ -146,7 +183,7 @@ function ParticipantsScreen() {
         </Button>
         <Button
           disabled={participants.length === 0}
-          onClick={() => router.push('/products/togather/app/groups')}
+          onClick={handleNextClick}
         >
           Next →
         </Button>
