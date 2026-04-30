@@ -11,6 +11,7 @@ export interface Participant {
   contactEmail?: string;
   willingToCoach: boolean;
   coachingNotes?: string;
+  childId?: string;
 }
 
 export interface Affinity {

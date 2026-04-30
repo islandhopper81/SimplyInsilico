@@ -6,6 +6,7 @@ import type { Participant } from '@/lib/togather/types';
 
 interface ParticipantFormProps {
   initialValues: Participant | null;
+  participants: Participant[];
   onSave: (participant: Participant) => void;
   onCancel: () => void;
 }
@@ -21,15 +22,17 @@ const EMPTY_FORM = {
   contactEmail: '',
   willingToCoach: false,
   coachingNotes: '',
+  childId: '',
 };
 
-export default function ParticipantForm({ initialValues, onSave, onCancel }: ParticipantFormProps) {
+export default function ParticipantForm({ initialValues, participants, onSave, onCancel }: ParticipantFormProps) {
   const [fields, setFields] = useState({
     name: initialValues?.name ?? EMPTY_FORM.name,
     ageGroup: initialValues?.ageGroup ?? EMPTY_FORM.ageGroup,
     contactEmail: initialValues?.contactEmail ?? EMPTY_FORM.contactEmail,
     willingToCoach: initialValues?.willingToCoach ?? EMPTY_FORM.willingToCoach,
     coachingNotes: initialValues?.coachingNotes ?? EMPTY_FORM.coachingNotes,
+    childId: initialValues?.childId ?? EMPTY_FORM.childId,
   });
   const [errors, setErrors] = useState<FormErrors>({});
 
@@ -66,6 +69,7 @@ export default function ParticipantForm({ initialValues, onSave, onCancel }: Par
       contactEmail: fields.contactEmail.trim() || undefined,
       willingToCoach: fields.willingToCoach,
       coachingNotes: fields.coachingNotes.trim() || undefined,
+      childId: fields.willingToCoach && fields.childId ? fields.childId : undefined,
     });
   }
 
@@ -143,17 +147,47 @@ export default function ParticipantForm({ initialValues, onSave, onCancel }: Par
       </div>
 
       {/* Willing to coach */}
-      <div className="flex items-center gap-2">
-        <input
-          id="p-willing-to-coach"
-          type="checkbox"
-          checked={fields.willingToCoach}
-          onChange={(e) => setFields((prev) => ({ ...prev, willingToCoach: e.target.checked }))}
-          className="h-4 w-4 rounded border-border accent-primary"
-        />
-        <label htmlFor="p-willing-to-coach" className="text-sm font-medium text-foreground">
-          Willing to coach
-        </label>
+      <div className="space-y-3">
+        <div className="flex items-center gap-2">
+          <input
+            id="p-willing-to-coach"
+            type="checkbox"
+            checked={fields.willingToCoach}
+            onChange={(e) => setFields((prev) => ({
+              ...prev,
+              willingToCoach: e.target.checked,
+              childId: e.target.checked ? prev.childId : '',
+            }))}
+            className="h-4 w-4 rounded border-border accent-primary"
+          />
+          <label htmlFor="p-willing-to-coach" className="text-sm font-medium text-foreground">
+            Willing to coach
+          </label>
+        </div>
+
+        {fields.willingToCoach && (
+          <div className="space-y-1.5 pl-6">
+            <label htmlFor="p-child-id" className="block text-sm font-medium text-foreground">
+              Linked child <span className="text-muted-foreground font-normal">(optional)</span>
+            </label>
+            <select
+              id="p-child-id"
+              value={fields.childId}
+              onChange={(e) => setFields((prev) => ({ ...prev, childId: e.target.value }))}
+              className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+            >
+              <option value="">None</option>
+              {participants
+                .filter((p) => p.id !== initialValues?.id)
+                .map((p) => (
+                  <option key={p.id} value={p.id}>{p.name}</option>
+                ))}
+            </select>
+            <p className="text-xs text-muted-foreground">
+              If this coach has a child in the session, select them here. A strong keep-together preference will be set automatically.
+            </p>
+          </div>
+        )}
       </div>
 
       {/* Actions */}

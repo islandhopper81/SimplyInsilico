@@ -80,7 +80,20 @@ export const useTogetherStore = create<TogetherStore>((set) => ({
   addParticipant: (participant: Participant) =>
     set((state) => {
       const participants = [...state.participants, participant];
-      return { participants };
+      let affinities = state.affinities;
+
+      if (participant.willingToCoach && participant.childId) {
+        const childExists = participants.some((p) => p.id === participant.childId);
+        if (childExists) {
+          affinities = [
+            ...affinities,
+            { fromId: participant.id, toId: participant.childId, weight: 2.0, system: true },
+          ];
+        }
+      }
+
+      const meta = recomputeMeta(affinities, state.groups, state.meta.assignedBy);
+      return { participants, affinities, meta };
     }),
 
   updateParticipant: (id: string, updates: Partial<Participant>) =>
@@ -89,12 +102,22 @@ export const useTogetherStore = create<TogetherStore>((set) => ({
         p.id === id ? { ...p, ...updates } : p
       );
 
-      // If willingToCoach was toggled off, remove the system affinity for this participant
-      let affinities = state.affinities;
-      if (updates.willingToCoach === false) {
-        affinities = affinities.filter(
-          (a) => !(a.system && (a.fromId === id || a.toId === id))
-        );
+      const updatedParticipant = participants.find((p) => p.id === id)!;
+
+      // Remove any existing system affinity where this participant is the coach
+      let affinities = state.affinities.filter(
+        (a) => !(a.system && a.fromId === id)
+      );
+
+      // Recreate system affinity if coach flag is on and a valid child is linked
+      if (updatedParticipant.willingToCoach && updatedParticipant.childId) {
+        const childExists = participants.some((p) => p.id === updatedParticipant.childId);
+        if (childExists) {
+          affinities = [
+            ...affinities,
+            { fromId: id, toId: updatedParticipant.childId, weight: 2.0, system: true },
+          ];
+        }
       }
 
       const meta = recomputeMeta(affinities, state.groups, state.meta.assignedBy);
