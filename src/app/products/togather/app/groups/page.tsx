@@ -9,6 +9,7 @@ import NavigationGuard from '@/components/togather/NavigationGuard';
 import ScoreBar from '@/components/togather/ScoreBar';
 import ViewToggle, { type ViewMode } from '@/components/togather/ViewToggle';
 import BoardView from '@/components/togather/BoardView';
+import ExportPanel from '@/components/togather/ExportPanel';
 import { useTogetherStore } from '@/lib/togather/store';
 import { callAlgorithm } from '@/lib/togather/algorithmClient';
 import { GROUP_COLORS } from '@/lib/togather/groupColors';
@@ -137,6 +138,7 @@ function GroupsScreen() {
             <Play size={14} />
             {isRunning ? 'Running…' : hasExistingGroups ? 'Re-run Algorithm' : 'Run Algorithm'}
           </Button>
+          <ExportPanel />
         </div>
       </div>
 
