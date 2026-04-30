@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import NavigationGuard from '@/components/togather/NavigationGuard';
 import ParticipantForm from '@/components/togather/ParticipantForm';
 import ParticipantList from '@/components/togather/ParticipantList';
+import CsvImportButton from '@/components/togather/CsvImportButton';
 import { useTogetherStore } from '@/lib/togather/store';
 import type { Participant } from '@/lib/togather/types';
 
@@ -16,6 +17,10 @@ function ParticipantsScreen() {
   const addParticipant = useTogetherStore((state) => state.addParticipant);
   const updateParticipant = useTogetherStore((state) => state.updateParticipant);
   const removeParticipant = useTogetherStore((state) => state.removeParticipant);
+
+  function handleCsvImport(imported: Participant[]) {
+    imported.forEach(addParticipant);
+  }
 
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -56,10 +61,13 @@ function ParticipantsScreen() {
             Participants ({participants.length})
           </h2>
           {!isFormVisible && (
-            <Button size="sm" onClick={() => setShowForm(true)}>
-              <UserPlus size={14} />
-              Add
-            </Button>
+            <div className="flex items-center gap-2">
+              <CsvImportButton onImport={handleCsvImport} />
+              <Button size="sm" onClick={() => setShowForm(true)}>
+                <UserPlus size={14} />
+                Add
+              </Button>
+            </div>
           )}
         </div>
 
