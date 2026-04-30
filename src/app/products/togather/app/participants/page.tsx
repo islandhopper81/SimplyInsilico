@@ -89,6 +89,7 @@ function ParticipantsScreen() {
         {isParticipantFormVisible && (
           <ParticipantForm
             initialValues={editingParticipant}
+            participants={participants}
             onSave={handleParticipantSave}
             onCancel={handleCancelParticipantForm}
           />
