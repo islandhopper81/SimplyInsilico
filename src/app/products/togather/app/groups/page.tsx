@@ -1,20 +1,22 @@
 'use client';
 
 import { useState } from 'react';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import { Play } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import NavigationGuard from '@/components/togather/NavigationGuard';
+import ScoreBar from '@/components/togather/ScoreBar';
+import ViewToggle, { type ViewMode } from '@/components/togather/ViewToggle';
+import BoardView from '@/components/togather/BoardView';
 import { useTogetherStore } from '@/lib/togather/store';
 import { callAlgorithm } from '@/lib/togather/algorithmClient';
+import { GROUP_COLORS } from '@/lib/togather/groupColors';
 import type { AlgorithmGroupResult, AlgorithmWarningResponse } from '@/lib/togather/algorithmTypes';
 import type { Group } from '@/lib/togather/types';
 
-const GROUP_COLORS = [
-  '#3B82F6', '#8B5CF6', '#F59E0B', '#10B981',
-  '#EF4444', '#06B6D4', '#F97316', '#84CC16',
-  '#EC4899', '#14B8A6', '#F43F5E', '#A855F7',
-];
+// GraphView uses Cytoscape which is browser-only
+const GraphView = dynamic(() => import('@/components/togather/GraphView'), { ssr: false });
 
 function toStoreGroups(apiGroups: AlgorithmGroupResult[]): Group[] {
   return apiGroups.map((g, i) => ({
@@ -39,6 +41,7 @@ function GroupsScreen() {
   const [fallbackToast, setFallbackToast] = useState<string | null>(null);
   const [coachWarning, setCoachWarning] = useState<AlgorithmWarningResponse | null>(null);
   const [pendingGroups, setPendingGroups] = useState<AlgorithmGroupResult[] | null>(null);
+  const [viewMode, setViewMode] = useState<ViewMode>('board');
 
   const hasExistingGroups = groups.length > 0 && groups.some((g) => g.memberIds.length > 0);
 
@@ -108,7 +111,7 @@ function GroupsScreen() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-10 space-y-8">
+    <div className="max-w-5xl mx-auto px-4 py-10 space-y-6">
 
       {/* Fallback toast */}
       {fallbackToast && (
@@ -122,15 +125,23 @@ function GroupsScreen() {
       )}
 
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-4 flex-wrap">
         <h2 className="text-base font-semibold text-foreground">
           Groups {hasExistingGroups ? `(${groups.length})` : ''}
         </h2>
-        <Button onClick={handleRunClick} disabled={isRunning || participants.length === 0}>
-          <Play size={14} />
-          {isRunning ? 'Running…' : hasExistingGroups ? 'Re-run Algorithm' : 'Run Algorithm'}
-        </Button>
+        <div className="flex items-center gap-3">
+          {hasExistingGroups && (
+            <ViewToggle view={viewMode} onChange={setViewMode} />
+          )}
+          <Button onClick={handleRunClick} disabled={isRunning || participants.length === 0}>
+            <Play size={14} />
+            {isRunning ? 'Running…' : hasExistingGroups ? 'Re-run Algorithm' : 'Run Algorithm'}
+          </Button>
+        </div>
       </div>
+
+      {/* Score bar — only shown when groups exist */}
+      {hasExistingGroups && <ScoreBar />}
 
       {/* Empty state */}
       {!hasExistingGroups && (
@@ -139,26 +150,9 @@ function GroupsScreen() {
         </p>
       )}
 
-      {/* Groups placeholder — board view comes in SIM-56 */}
+      {/* Board / Graph view */}
       {hasExistingGroups && (
-        <div className="space-y-3">
-          {groups.map((group) => (
-            <div
-              key={group.id}
-              className="rounded-lg border border-border bg-card px-4 py-3 flex items-center gap-3"
-            >
-              <span
-                className="size-3 rounded-full shrink-0"
-                style={{ backgroundColor: group.color }}
-              />
-              <span className="text-sm font-medium text-foreground">{group.name}</span>
-              <span className="text-xs text-muted-foreground">
-                {group.memberIds.length} member{group.memberIds.length !== 1 ? 's' : ''}
-                {group.headCoachId ? '' : ' · no coach'}
-              </span>
-            </div>
-          ))}
-        </div>
+        viewMode === 'board' ? <BoardView /> : <GraphView />
       )}
 
       {/* Navigation */}

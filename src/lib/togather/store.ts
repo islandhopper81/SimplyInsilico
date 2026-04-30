@@ -195,4 +195,21 @@ export const useTogetherStore = create<TogetherStore>((set) => ({
       const meta = recomputeMeta(state.affinities, groups, 'manual');
       return { groups, meta };
     }),
+
+  demoteHeadCoach: (groupId: string) =>
+    set((state) => {
+      const groups = state.groups.map((g) =>
+        g.id === groupId ? { ...g, headCoachId: null } : g
+      );
+      const meta = recomputeMeta(state.affinities, groups, 'manual');
+      return { groups, meta };
+    }),
+
+  renameGroup: (groupId: string, newName: string) =>
+    set((state) => {
+      const groups = state.groups.map((g) =>
+        g.id === groupId ? { ...g, name: newName } : g
+      );
+      return { groups };
+    }),
 }));

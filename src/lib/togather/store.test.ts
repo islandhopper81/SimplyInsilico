@@ -213,6 +213,71 @@ describe('satisfaction score', () => {
   });
 });
 
+describe('demoteHeadCoach', () => {
+  it('sets headCoachId to null for the specified group', () => {
+    const { applyAlgorithmResult, demoteHeadCoach } = useTogetherStore.getState();
+    applyAlgorithmResult([
+      { id: 'g1', name: 'Team 1', color: '#000', memberIds: ['p1', 'p2'], headCoachId: 'p1' },
+    ]);
+
+    demoteHeadCoach('g1');
+
+    expect(useTogetherStore.getState().groups[0].headCoachId).toBeNull();
+  });
+
+  it('does not affect other groups', () => {
+    const { applyAlgorithmResult, demoteHeadCoach } = useTogetherStore.getState();
+    applyAlgorithmResult([
+      { id: 'g1', name: 'Team 1', color: '#000', memberIds: ['p1'], headCoachId: 'p1' },
+      { id: 'g2', name: 'Team 2', color: '#fff', memberIds: ['p2'], headCoachId: 'p2' },
+    ]);
+
+    demoteHeadCoach('g1');
+
+    const { groups } = useTogetherStore.getState();
+    expect(groups[0].headCoachId).toBeNull();
+    expect(groups[1].headCoachId).toBe('p2');
+  });
+
+  it('updates coachCoverage in meta', () => {
+    const { applyAlgorithmResult, demoteHeadCoach } = useTogetherStore.getState();
+    applyAlgorithmResult([
+      { id: 'g1', name: 'Team 1', color: '#000', memberIds: ['p1'], headCoachId: 'p1' },
+      { id: 'g2', name: 'Team 2', color: '#fff', memberIds: ['p2'], headCoachId: null },
+    ]);
+    expect(useTogetherStore.getState().meta.coachCoverage).toBe(1);
+
+    demoteHeadCoach('g1');
+
+    expect(useTogetherStore.getState().meta.coachCoverage).toBe(0);
+  });
+});
+
+describe('renameGroup', () => {
+  it('updates the name of the specified group', () => {
+    const { applyAlgorithmResult, renameGroup } = useTogetherStore.getState();
+    applyAlgorithmResult([
+      { id: 'g1', name: 'Team 1', color: '#000', memberIds: [], headCoachId: null },
+    ]);
+
+    renameGroup('g1', 'Blue Wolves');
+
+    expect(useTogetherStore.getState().groups[0].name).toBe('Blue Wolves');
+  });
+
+  it('does not affect other groups', () => {
+    const { applyAlgorithmResult, renameGroup } = useTogetherStore.getState();
+    applyAlgorithmResult([
+      { id: 'g1', name: 'Team 1', color: '#000', memberIds: [], headCoachId: null },
+      { id: 'g2', name: 'Team 2', color: '#fff', memberIds: [], headCoachId: null },
+    ]);
+
+    renameGroup('g1', 'Blue Wolves');
+
+    expect(useTogetherStore.getState().groups[1].name).toBe('Team 2');
+  });
+});
+
 describe('importSession', () => {
   it('replaces the entire store state with the imported data', () => {
     const importedState = {
