@@ -7,6 +7,13 @@ import { useTogetherStore } from '@/lib/togather/store';
 // Cytoscape is browser-only; import dynamically on the client
 let cytoscapeModule: typeof cytoscape | null = null;
 
+function getInitials(name: string): string {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return '?';
+  if (parts.length === 1) return parts[0][0].toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
 async function getCytoscape(): Promise<typeof cytoscape> {
   if (!cytoscapeModule) {
     cytoscapeModule = (await import('cytoscape')).default;
@@ -16,6 +23,7 @@ async function getCytoscape(): Promise<typeof cytoscape> {
 
 export default function GraphView() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const tooltipRef = useRef<HTMLDivElement>(null);
   const cyRef = useRef<cytoscape.Core | null>(null);
 
   const participants = useTogetherStore((state) => state.participants);
@@ -47,6 +55,7 @@ export default function GraphView() {
           data: {
             id: p.id,
             label: p.name,
+            initials: getInitials(p.name),
             color: groupInfo?.color ?? '#94A3B8',
             groupId: groupInfo?.id ?? null,
             isCoach,
@@ -74,13 +83,14 @@ export default function GraphView() {
             selector: 'node',
             style: {
               'background-color': 'data(color)' as string,
-              label: 'data(label)',
-              'font-size': '10px',
-              color: '#1e293b',
-              'text-valign': 'bottom',
-              'text-margin-y': 4,
-              width: 28,
-              height: 28,
+              label: 'data(initials)',
+              'font-size': '11px',
+              'font-weight': 'bold',
+              color: '#ffffff',
+              'text-valign': 'center',
+              'text-halign': 'center',
+              width: 36,
+              height: 36,
             },
           },
           {
@@ -88,8 +98,8 @@ export default function GraphView() {
             selector: 'node[?isCoach]',
             style: {
               shape: 'diamond',
-              width: 34,
-              height: 34,
+              width: 42,
+              height: 42,
               'border-width': 2,
               'border-color': '#F59E0B',
             },
@@ -118,6 +128,25 @@ export default function GraphView() {
             },
           },
         ],
+      });
+
+      // Show full name tooltip on hover
+      cy.on('mouseover', 'node', (event) => {
+        const node = event.target as cytoscape.NodeSingular;
+        const fullName = node.data('label') as string;
+        const renderedPos = node.renderedPosition();
+        if (tooltipRef.current) {
+          tooltipRef.current.textContent = fullName;
+          tooltipRef.current.style.display = 'block';
+          tooltipRef.current.style.left = `${renderedPos.x}px`;
+          tooltipRef.current.style.top = `${renderedPos.y - 36}px`;
+        }
+      });
+
+      cy.on('mouseout', 'node', () => {
+        if (tooltipRef.current) {
+          tooltipRef.current.style.display = 'none';
+        }
       });
 
       // Drag node to reassign group: on drag stop, find the group whose color centroid
@@ -185,6 +214,12 @@ export default function GraphView() {
   return (
     <div className="relative rounded-lg border border-border overflow-hidden bg-muted/20">
       <div ref={containerRef} className="w-full h-[480px]" />
+
+      {/* Full-name tooltip — shown imperatively by Cytoscape hover events */}
+      <div
+        ref={tooltipRef}
+        className="pointer-events-none absolute hidden -translate-x-1/2 -translate-y-full rounded bg-foreground px-2 py-1 text-xs text-background shadow-md whitespace-nowrap"
+      />
 
       {/* Legend */}
       <div className="absolute bottom-3 left-3 bg-background/90 backdrop-blur-sm rounded-md border border-border px-3 py-2 text-xs space-y-1 shadow-sm">
