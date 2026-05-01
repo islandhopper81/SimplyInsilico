@@ -2,10 +2,18 @@
 
 import { useEffect, useRef } from 'react';
 import type cytoscape from 'cytoscape';
+import type { Group } from '@/lib/togather/types';
 import { useTogetherStore } from '@/lib/togather/store';
 
 // Cytoscape is browser-only; import dynamically on the client
 let cytoscapeModule: typeof cytoscape | null = null;
+
+function getInitials(name: string): string {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return '?';
+  if (parts.length === 1) return parts[0][0].toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
 
 async function getCytoscape(): Promise<typeof cytoscape> {
   if (!cytoscapeModule) {
@@ -14,8 +22,44 @@ async function getCytoscape(): Promise<typeof cytoscape> {
   return cytoscapeModule;
 }
 
+// Arrange each group's members in a circle around a cluster center.
+// Clusters are laid out in a grid so every group gets its own region.
+function buildPresetPositions(
+  groups: Group[]
+): Record<string, { x: number; y: number }> {
+  const positions: Record<string, { x: number; y: number }> = {};
+  const activeGroups = groups.filter((g) => g.memberIds.length > 0);
+
+  const CLUSTER_SPACING = 240;
+  const BASE_RADIUS = 55;
+  const PER_MEMBER_RADIUS = 10;
+  const cols = Math.ceil(Math.sqrt(activeGroups.length));
+
+  activeGroups.forEach((group, groupIdx) => {
+    const col = groupIdx % cols;
+    const row = Math.floor(groupIdx / cols);
+    const centerX = col * CLUSTER_SPACING + CLUSTER_SPACING / 2;
+    const centerY = row * CLUSTER_SPACING + CLUSTER_SPACING / 2;
+
+    const memberCount = group.memberIds.length;
+    const radius = Math.max(BASE_RADIUS, memberCount * PER_MEMBER_RADIUS);
+
+    group.memberIds.forEach((memberId, memberIdx) => {
+      // Start from top (-π/2) and go clockwise
+      const angle = (2 * Math.PI * memberIdx) / memberCount - Math.PI / 2;
+      positions[memberId] = {
+        x: centerX + radius * Math.cos(angle),
+        y: centerY + radius * Math.sin(angle),
+      };
+    });
+  });
+
+  return positions;
+}
+
 export default function GraphView() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const tooltipRef = useRef<HTMLDivElement>(null);
   const cyRef = useRef<cytoscape.Core | null>(null);
 
   const participants = useTogetherStore((state) => state.participants);
@@ -39,19 +83,35 @@ export default function GraphView() {
     getCytoscape().then((Cytoscape) => {
       if (destroyed || !containerRef.current) return;
 
-      // Nodes: one per participant
-      const nodes: cytoscape.NodeDefinition[] = participants.map((p) => {
+      const presetPositions = buildPresetPositions(groups);
+
+      // Compound nodes: one translucent container per non-empty group
+      const groupNodes: cytoscape.NodeDefinition[] = groups
+        .filter((g) => g.memberIds.length > 0)
+        .map((g) => ({
+          data: {
+            id: `group-${g.id}`,
+            label: g.name,
+            color: g.color,
+          },
+        }));
+
+      // Participant nodes nested inside their group compound node
+      const participantNodes: cytoscape.NodeDefinition[] = participants.map((p) => {
         const groupInfo = participantGroupMap.get(p.id);
         const isCoach = groups.some((g) => g.headCoachId === p.id);
         return {
           data: {
             id: p.id,
+            parent: groupInfo ? `group-${groupInfo.id}` : undefined,
             label: p.name,
+            initials: getInitials(p.name),
             color: groupInfo?.color ?? '#94A3B8',
             groupId: groupInfo?.id ?? null,
             isCoach,
             willingToCoach: p.willingToCoach,
           },
+          position: presetPositions[p.id],
         };
       });
 
@@ -67,29 +127,52 @@ export default function GraphView() {
 
       const cy = Cytoscape({
         container: containerRef.current,
-        elements: { nodes, edges },
-        layout: { name: 'cose', animate: false },
+        elements: { nodes: [...groupNodes, ...participantNodes], edges },
+        // preset uses the positions embedded in each node's definition above;
+        // compound containers auto-size to fit their children
+        layout: { name: 'preset', animate: false },
         style: [
           {
-            selector: 'node',
+            // Participant dots
+            selector: 'node:childless',
             style: {
               'background-color': 'data(color)' as string,
+              label: 'data(initials)',
+              'font-size': '11px',
+              'font-weight': 'bold',
+              color: '#ffffff',
+              'text-valign': 'center',
+              'text-halign': 'center',
+              width: 36,
+              height: 36,
+            },
+          },
+          {
+            // Group container (compound node) — auto-sized to fit children
+            selector: 'node:parent',
+            style: {
+              'background-color': 'data(color)' as string,
+              'background-opacity': 0.12,
+              'border-color': 'data(color)' as string,
+              'border-width': 2,
+              'border-opacity': 0.5,
               label: 'data(label)',
-              'font-size': '10px',
-              color: '#1e293b',
-              'text-valign': 'bottom',
-              'text-margin-y': 4,
-              width: 28,
-              height: 28,
+              'text-valign': 'top',
+              'text-halign': 'center',
+              'font-size': '12px',
+              'font-weight': 'bold',
+              color: 'data(color)' as string,
+              shape: 'roundrectangle',
+              padding: '28px',
             },
           },
           {
             // Coach nodes rendered as diamonds
-            selector: 'node[?isCoach]',
+            selector: 'node:childless[?isCoach]',
             style: {
               shape: 'diamond',
-              width: 34,
-              height: 34,
+              width: 42,
+              height: 42,
               'border-width': 2,
               'border-color': '#F59E0B',
             },
@@ -120,9 +203,29 @@ export default function GraphView() {
         ],
       });
 
-      // Drag node to reassign group: on drag stop, find the group whose color centroid
-      // is nearest the dropped position and move the participant.
-      cy.on('dragfreeon', 'node', (event) => {
+      // Show full name tooltip on hover (participant nodes only, not group containers)
+      cy.on('mouseover', 'node:childless', (event) => {
+        const node = event.target as cytoscape.NodeSingular;
+        const fullName = node.data('label') as string;
+        const renderedPos = node.renderedPosition();
+        if (tooltipRef.current) {
+          tooltipRef.current.textContent = fullName;
+          tooltipRef.current.style.display = 'block';
+          tooltipRef.current.style.left = `${renderedPos.x}px`;
+          tooltipRef.current.style.top = `${renderedPos.y - 36}px`;
+        }
+      });
+
+      cy.on('mouseout', 'node:childless', () => {
+        if (tooltipRef.current) {
+          tooltipRef.current.style.display = 'none';
+        }
+      });
+
+      // Drag participant to reassign group: find the group whose centroid is nearest
+      // the dropped position. Only fires for participant nodes (node:childless), not
+      // group containers — dragging a container just repositions it visually.
+      cy.on('dragfreeon', 'node:childless', (event) => {
         const node = event.target as cytoscape.NodeSingular;
         const participantId = node.id();
         const pos = node.position();
@@ -159,8 +262,10 @@ export default function GraphView() {
         if (!closestGroupId) return;
 
         if (isShiftHeld) {
-          // Shift+drag: move the node AND all directly connected neighbours to the target group
-          const connectedIds = node.neighborhood('node').map((n: cytoscape.NodeSingular) => n.id());
+          // Shift+drag: move the node AND all directly connected leaf neighbours
+          const connectedIds = node
+            .neighborhood('node:childless')
+            .map((n: cytoscape.NodeSingular) => n.id());
           moveParticipant(participantId, closestGroupId);
           for (const connectedId of connectedIds) {
             moveParticipant(connectedId, closestGroupId);
@@ -186,11 +291,21 @@ export default function GraphView() {
     <div className="relative rounded-lg border border-border overflow-hidden bg-muted/20">
       <div ref={containerRef} className="w-full h-[480px]" />
 
+      {/* Full-name tooltip — shown imperatively by Cytoscape hover events */}
+      <div
+        ref={tooltipRef}
+        className="pointer-events-none absolute hidden -translate-x-1/2 -translate-y-full rounded bg-foreground px-2 py-1 text-xs text-background shadow-md whitespace-nowrap"
+      />
+
       {/* Legend */}
       <div className="absolute bottom-3 left-3 bg-background/90 backdrop-blur-sm rounded-md border border-border px-3 py-2 text-xs space-y-1 shadow-sm">
         <div className="flex items-center gap-2">
+          <div className="w-4 h-4 rounded-sm border-2 border-slate-400 bg-slate-400/10 shrink-0" />
+          <span className="text-muted-foreground">Group (drag container to reposition)</span>
+        </div>
+        <div className="flex items-center gap-2">
           <div className="w-4 h-4 rounded-full bg-slate-400 shrink-0" />
-          <span className="text-muted-foreground">Participant (colored by group)</span>
+          <span className="text-muted-foreground">Participant</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-4 h-4 bg-slate-400 shrink-0" style={{ clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)' }} />
@@ -204,7 +319,7 @@ export default function GraphView() {
           <div className="h-1 w-6 bg-amber-400 shrink-0" />
           <span className="text-muted-foreground">Coach-child link</span>
         </div>
-        <div className="text-muted-foreground/70 pt-0.5">Drag to reassign · Shift+drag moves neighbours</div>
+        <div className="text-muted-foreground/70 pt-0.5">Drag dot to reassign · Shift+drag moves neighbours</div>
       </div>
     </div>
   );
