@@ -19,7 +19,7 @@ export const products: Product[] = [
   },
   {
     name: 'Togather',
-    tagline: 'Smart, friendship-aware team formation for leagues and organizers.',
+    tagline: 'Friendship-aware team formation for leagues and organizers.',
     imagePath: '/images/products/togather.jpg',
     url: '/products/togather',
     isExternal: false,

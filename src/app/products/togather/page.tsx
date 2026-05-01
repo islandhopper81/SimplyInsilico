@@ -78,7 +78,7 @@ export default function TogatherLandingPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            Smart, friendship-aware group formation for leagues, coaches, and organizers.
+            Friendship-aware group formation for leagues, coaches, and organizers.
             Keep friends together, guarantee every team has a coach, and export the result in seconds.
           </motion.p>
           <motion.div
