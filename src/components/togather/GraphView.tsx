@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import type cytoscape from 'cytoscape';
+import type { Group } from '@/lib/togather/types';
 import { useTogetherStore } from '@/lib/togather/store';
 
 // Cytoscape is browser-only; import dynamically on the client
@@ -19,6 +20,41 @@ async function getCytoscape(): Promise<typeof cytoscape> {
     cytoscapeModule = (await import('cytoscape')).default;
   }
   return cytoscapeModule;
+}
+
+// Arrange each group's members in a circle around a cluster center.
+// Clusters are laid out in a grid so every group gets its own region.
+function buildPresetPositions(
+  groups: Group[]
+): Record<string, { x: number; y: number }> {
+  const positions: Record<string, { x: number; y: number }> = {};
+  const activeGroups = groups.filter((g) => g.memberIds.length > 0);
+
+  const CLUSTER_SPACING = 240;
+  const BASE_RADIUS = 55;
+  const PER_MEMBER_RADIUS = 10;
+  const cols = Math.ceil(Math.sqrt(activeGroups.length));
+
+  activeGroups.forEach((group, groupIdx) => {
+    const col = groupIdx % cols;
+    const row = Math.floor(groupIdx / cols);
+    const centerX = col * CLUSTER_SPACING + CLUSTER_SPACING / 2;
+    const centerY = row * CLUSTER_SPACING + CLUSTER_SPACING / 2;
+
+    const memberCount = group.memberIds.length;
+    const radius = Math.max(BASE_RADIUS, memberCount * PER_MEMBER_RADIUS);
+
+    group.memberIds.forEach((memberId, memberIdx) => {
+      // Start from top (-π/2) and go clockwise
+      const angle = (2 * Math.PI * memberIdx) / memberCount - Math.PI / 2;
+      positions[memberId] = {
+        x: centerX + radius * Math.cos(angle),
+        y: centerY + radius * Math.sin(angle),
+      };
+    });
+  });
+
+  return positions;
 }
 
 export default function GraphView() {
@@ -47,6 +83,8 @@ export default function GraphView() {
     getCytoscape().then((Cytoscape) => {
       if (destroyed || !containerRef.current) return;
 
+      const presetPositions = buildPresetPositions(groups);
+
       // Compound nodes: one translucent container per non-empty group
       const groupNodes: cytoscape.NodeDefinition[] = groups
         .filter((g) => g.memberIds.length > 0)
@@ -73,6 +111,7 @@ export default function GraphView() {
             isCoach,
             willingToCoach: p.willingToCoach,
           },
+          position: presetPositions[p.id],
         };
       });
 
@@ -89,7 +128,9 @@ export default function GraphView() {
       const cy = Cytoscape({
         container: containerRef.current,
         elements: { nodes: [...groupNodes, ...participantNodes], edges },
-        layout: { name: 'cose', animate: false },
+        // preset uses the positions embedded in each node's definition above;
+        // compound containers auto-size to fit their children
+        layout: { name: 'preset', animate: false },
         style: [
           {
             // Participant dots
@@ -107,7 +148,7 @@ export default function GraphView() {
             },
           },
           {
-            // Group container (compound node)
+            // Group container (compound node) — auto-sized to fit children
             selector: 'node:parent',
             style: {
               'background-color': 'data(color)' as string,
@@ -122,7 +163,7 @@ export default function GraphView() {
               'font-weight': 'bold',
               color: 'data(color)' as string,
               shape: 'roundrectangle',
-              padding: '24px',
+              padding: '28px',
             },
           },
           {
@@ -162,7 +203,7 @@ export default function GraphView() {
         ],
       });
 
-      // Show full name tooltip on hover (only on participant nodes, not group containers)
+      // Show full name tooltip on hover (participant nodes only, not group containers)
       cy.on('mouseover', 'node:childless', (event) => {
         const node = event.target as cytoscape.NodeSingular;
         const fullName = node.data('label') as string;
