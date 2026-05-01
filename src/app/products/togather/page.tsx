@@ -123,13 +123,13 @@ export default function TogatherLandingPage() {
             still produces complaints.
           </motion.p>
           <motion.p
-            className="mt-4 text-lg text-muted-foreground leading-relaxed"
+            className="mt-6 text-2xl font-bold text-foreground leading-relaxed"
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
             viewport={{ once: true }}
           >
-            Togather solves it in minutes.
+            <span className="text-primary">Togather</span> solves it in minutes.
           </motion.p>
         </div>
       </section>
