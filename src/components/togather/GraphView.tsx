@@ -47,13 +47,25 @@ export default function GraphView() {
     getCytoscape().then((Cytoscape) => {
       if (destroyed || !containerRef.current) return;
 
-      // Nodes: one per participant
-      const nodes: cytoscape.NodeDefinition[] = participants.map((p) => {
+      // Compound nodes: one translucent container per non-empty group
+      const groupNodes: cytoscape.NodeDefinition[] = groups
+        .filter((g) => g.memberIds.length > 0)
+        .map((g) => ({
+          data: {
+            id: `group-${g.id}`,
+            label: g.name,
+            color: g.color,
+          },
+        }));
+
+      // Participant nodes nested inside their group compound node
+      const participantNodes: cytoscape.NodeDefinition[] = participants.map((p) => {
         const groupInfo = participantGroupMap.get(p.id);
         const isCoach = groups.some((g) => g.headCoachId === p.id);
         return {
           data: {
             id: p.id,
+            parent: groupInfo ? `group-${groupInfo.id}` : undefined,
             label: p.name,
             initials: getInitials(p.name),
             color: groupInfo?.color ?? '#94A3B8',
@@ -76,11 +88,12 @@ export default function GraphView() {
 
       const cy = Cytoscape({
         container: containerRef.current,
-        elements: { nodes, edges },
+        elements: { nodes: [...groupNodes, ...participantNodes], edges },
         layout: { name: 'cose', animate: false },
         style: [
           {
-            selector: 'node',
+            // Participant dots
+            selector: 'node:childless',
             style: {
               'background-color': 'data(color)' as string,
               label: 'data(initials)',
@@ -94,8 +107,27 @@ export default function GraphView() {
             },
           },
           {
+            // Group container (compound node)
+            selector: 'node:parent',
+            style: {
+              'background-color': 'data(color)' as string,
+              'background-opacity': 0.12,
+              'border-color': 'data(color)' as string,
+              'border-width': 2,
+              'border-opacity': 0.5,
+              label: 'data(label)',
+              'text-valign': 'top',
+              'text-halign': 'center',
+              'font-size': '12px',
+              'font-weight': 'bold',
+              color: 'data(color)' as string,
+              shape: 'roundrectangle',
+              padding: '24px',
+            },
+          },
+          {
             // Coach nodes rendered as diamonds
-            selector: 'node[?isCoach]',
+            selector: 'node:childless[?isCoach]',
             style: {
               shape: 'diamond',
               width: 42,
@@ -130,8 +162,8 @@ export default function GraphView() {
         ],
       });
 
-      // Show full name tooltip on hover
-      cy.on('mouseover', 'node', (event) => {
+      // Show full name tooltip on hover (only on participant nodes, not group containers)
+      cy.on('mouseover', 'node:childless', (event) => {
         const node = event.target as cytoscape.NodeSingular;
         const fullName = node.data('label') as string;
         const renderedPos = node.renderedPosition();
@@ -143,15 +175,16 @@ export default function GraphView() {
         }
       });
 
-      cy.on('mouseout', 'node', () => {
+      cy.on('mouseout', 'node:childless', () => {
         if (tooltipRef.current) {
           tooltipRef.current.style.display = 'none';
         }
       });
 
-      // Drag node to reassign group: on drag stop, find the group whose color centroid
-      // is nearest the dropped position and move the participant.
-      cy.on('dragfreeon', 'node', (event) => {
+      // Drag participant to reassign group: find the group whose centroid is nearest
+      // the dropped position. Only fires for participant nodes (node:childless), not
+      // group containers — dragging a container just repositions it visually.
+      cy.on('dragfreeon', 'node:childless', (event) => {
         const node = event.target as cytoscape.NodeSingular;
         const participantId = node.id();
         const pos = node.position();
@@ -188,8 +221,10 @@ export default function GraphView() {
         if (!closestGroupId) return;
 
         if (isShiftHeld) {
-          // Shift+drag: move the node AND all directly connected neighbours to the target group
-          const connectedIds = node.neighborhood('node').map((n: cytoscape.NodeSingular) => n.id());
+          // Shift+drag: move the node AND all directly connected leaf neighbours
+          const connectedIds = node
+            .neighborhood('node:childless')
+            .map((n: cytoscape.NodeSingular) => n.id());
           moveParticipant(participantId, closestGroupId);
           for (const connectedId of connectedIds) {
             moveParticipant(connectedId, closestGroupId);
@@ -224,8 +259,12 @@ export default function GraphView() {
       {/* Legend */}
       <div className="absolute bottom-3 left-3 bg-background/90 backdrop-blur-sm rounded-md border border-border px-3 py-2 text-xs space-y-1 shadow-sm">
         <div className="flex items-center gap-2">
+          <div className="w-4 h-4 rounded-sm border-2 border-slate-400 bg-slate-400/10 shrink-0" />
+          <span className="text-muted-foreground">Group (drag container to reposition)</span>
+        </div>
+        <div className="flex items-center gap-2">
           <div className="w-4 h-4 rounded-full bg-slate-400 shrink-0" />
-          <span className="text-muted-foreground">Participant (colored by group)</span>
+          <span className="text-muted-foreground">Participant</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-4 h-4 bg-slate-400 shrink-0" style={{ clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)' }} />
@@ -239,7 +278,7 @@ export default function GraphView() {
           <div className="h-1 w-6 bg-amber-400 shrink-0" />
           <span className="text-muted-foreground">Coach-child link</span>
         </div>
-        <div className="text-muted-foreground/70 pt-0.5">Drag to reassign · Shift+drag moves neighbours</div>
+        <div className="text-muted-foreground/70 pt-0.5">Drag dot to reassign · Shift+drag moves neighbours</div>
       </div>
     </div>
   );
