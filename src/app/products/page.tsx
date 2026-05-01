@@ -45,7 +45,7 @@ export default function ProductsPage() {
             {products.map((product, index) => (
               <motion.div
                 key={product.name}
-                className="w-full max-w-sm"
+                className="w-full max-w-sm h-full"
                 initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}

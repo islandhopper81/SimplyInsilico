@@ -17,4 +17,11 @@ export const products: Product[] = [
     url: 'https://feedthefamily.app/',
     isExternal: true,
   },
+  {
+    name: 'Togather',
+    tagline: 'Friendship-aware team formation for leagues and organizers.',
+    imagePath: '/images/products/togather.jpg',
+    url: '/products/togather',
+    isExternal: false,
+  },
 ];
