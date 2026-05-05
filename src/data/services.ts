@@ -30,6 +30,6 @@ export const services: Service[] = [
       'Whether you need to process sequencing data, build reproducible analysis workflows, or make sense ' +
       'of complex biological datasets, we deliver clean, documented solutions tailored to your project.',
     ctaLabel: 'Get in touch',
-    isVisible: true,
+    isVisible: false,
   },
 ];
