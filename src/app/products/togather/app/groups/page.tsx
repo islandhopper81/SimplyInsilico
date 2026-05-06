@@ -54,7 +54,12 @@ function GroupsScreen() {
 
     try {
       const { response, usedFallback } = await callAlgorithm({
-        session: { groupCount: session.groupCount, maxGroupSize: session.maxGroupSize },
+        session: {
+          groupCount: session.groupCount,
+          maxGroupSize: session.maxGroupSize,
+          ...(session.idealTeamSize !== undefined && { idealTeamSize: session.idealTeamSize }),
+          ...(session.minTeamSize !== undefined && { minTeamSize: session.minTeamSize }),
+        },
         participants: participants.map((p) => ({
           id: p.id,
           willingToCoach: p.willingToCoach,
