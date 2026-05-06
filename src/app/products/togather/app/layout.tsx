@@ -3,7 +3,7 @@ import AppTopBar from '@/components/togather/AppTopBar';
 import AppStepper from '@/components/togather/AppStepper';
 
 export const metadata: Metadata = {
-  title: 'Togather — Group Formation Tool',
+  title: 'toGather — Group Formation Tool',
 };
 
 export default function TogatherAppLayout({ children }: { children: React.ReactNode }) {
