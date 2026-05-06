@@ -1,0 +1,67 @@
+{
+  "session": {
+    "name": "Spring 2025 League",
+    "groupCount": 3,
+    "maxGroupSize": 7
+  },
+  "participants": [
+    { "id": "p01", "name": "Sarah Mitchell",   "ageGroup": "U10", "contactEmail": "sarah.mitchell@example.com", "willingToCoach": true,  "childId": "p02" },
+    { "id": "p02", "name": "Jake Mitchell",     "ageGroup": "U10", "contactEmail": null,                         "willingToCoach": false },
+    { "id": "p03", "name": "Carlos Rivera",     "ageGroup": "U10", "contactEmail": "carlos.rivera@example.com", "willingToCoach": false },
+    { "id": "p04", "name": "Mia Chen",          "ageGroup": "U10", "contactEmail": null,                         "willingToCoach": false },
+    { "id": "p05", "name": "Devon Patel",       "ageGroup": "U10", "contactEmail": "devon.patel@example.com",   "willingToCoach": true,  "childId": "p06" },
+    { "id": "p06", "name": "Aisha Okonkwo",     "ageGroup": "U10", "contactEmail": null,                         "willingToCoach": false },
+    { "id": "p07", "name": "Tyler Brooks",      "ageGroup": "U10", "contactEmail": null,                         "willingToCoach": false },
+    { "id": "p08", "name": "Emma Johansson",    "ageGroup": "U10", "contactEmail": "emma.j@example.com",        "willingToCoach": false },
+    { "id": "p09", "name": "Marcus Williams",   "ageGroup": "U12", "contactEmail": "marcus.w@example.com",      "willingToCoach": true,  "childId": "p10" },
+    { "id": "p10", "name": "Lily Williams",     "ageGroup": "U12", "contactEmail": null,                         "willingToCoach": false },
+    { "id": "p11", "name": "Priya Sharma",      "ageGroup": "U12", "contactEmail": "priya.s@example.com",       "willingToCoach": false },
+    { "id": "p12", "name": "Noah Garcia",       "ageGroup": "U12", "contactEmail": null,                         "willingToCoach": false },
+    { "id": "p13", "name": "Sofia Nguyen",      "ageGroup": "U12", "contactEmail": "sofia.ng@example.com",      "willingToCoach": false },
+    { "id": "p14", "name": "Ethan Park",        "ageGroup": "U12", "contactEmail": null,                         "willingToCoach": false },
+    { "id": "p15", "name": "Rachel Kim",        "ageGroup": "U12", "contactEmail": "rachel.k@example.com",      "willingToCoach": true,  "childId": "p16" },
+    { "id": "p16", "name": "James Kim",         "ageGroup": "U12", "contactEmail": null,                         "willingToCoach": false },
+    { "id": "p17", "name": "Olivia Thompson",   "ageGroup": "U8",  "contactEmail": "o.thompson@example.com",    "willingToCoach": false },
+    { "id": "p18", "name": "Ben Thompson",      "ageGroup": "U8",  "contactEmail": null,                         "willingToCoach": false }
+  ],
+  "affinities": [
+    { "fromId": "p01", "toId": "p02", "weight": 2.0, "system": true  },
+    { "fromId": "p05", "toId": "p06", "weight": 2.0, "system": true  },
+    { "fromId": "p09", "toId": "p10", "weight": 2.0, "system": true  },
+    { "fromId": "p15", "toId": "p16", "weight": 2.0, "system": true  },
+    { "fromId": "p03", "toId": "p07", "weight": 1.0, "system": false },
+    { "fromId": "p04", "toId": "p08", "weight": 1.0, "system": false },
+    { "fromId": "p03", "toId": "p04", "weight": 1.0, "system": false },
+    { "fromId": "p11", "toId": "p13", "weight": 1.0, "system": false },
+    { "fromId": "p12", "toId": "p14", "weight": 1.0, "system": false },
+    { "fromId": "p17", "toId": "p18", "weight": 1.0, "system": false }
+  ],
+  "groups": [
+    {
+      "id": "g01",
+      "name": "Team 1",
+      "color": "#3B82F6",
+      "memberIds": ["p01", "p02", "p03", "p04", "p07", "p08"],
+      "headCoachId": "p01"
+    },
+    {
+      "id": "g02",
+      "name": "Team 2",
+      "color": "#8B5CF6",
+      "memberIds": ["p05", "p06", "p09", "p10", "p11", "p12"],
+      "headCoachId": "p05"
+    },
+    {
+      "id": "g03",
+      "name": "Team 3",
+      "color": "#F59E0B",
+      "memberIds": ["p15", "p16", "p13", "p14", "p17", "p18"],
+      "headCoachId": "p15"
+    }
+  ],
+  "meta": {
+    "assignedBy": "algorithm",
+    "satisfactionScore": 0.667,
+    "coachCoverage": 3
+  }
+}

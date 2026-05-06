@@ -1,0 +1,72 @@
+{
+  "session": {
+    "name": "Spring 2025 Basketball League",
+    "groupCount": 4,
+    "maxGroupSize": 6
+  },
+  "participants": [
+    { "id": "p01", "name": "Alex Rodriguez",  "ageGroup": "U12", "contactEmail": "alex.r@example.com",    "willingToCoach": true  },
+    { "id": "p02", "name": "Jamie Chen",       "ageGroup": "U12", "contactEmail": null,                    "willingToCoach": false },
+    { "id": "p03", "name": "Morgan Davis",     "ageGroup": "U12", "contactEmail": null,                    "willingToCoach": false },
+    { "id": "p04", "name": "Casey Kim",        "ageGroup": "U12", "contactEmail": null,                    "willingToCoach": false },
+    { "id": "p05", "name": "Taylor Brooks",    "ageGroup": "U12", "contactEmail": null,                    "willingToCoach": false },
+    { "id": "p06", "name": "Jordan Lee",       "ageGroup": "U12", "contactEmail": null,                    "willingToCoach": false },
+    { "id": "p07", "name": "Sam Nguyen",       "ageGroup": "U12", "contactEmail": null,                    "willingToCoach": false },
+    { "id": "p08", "name": "Riley Patel",      "ageGroup": "U12", "contactEmail": null,                    "willingToCoach": false },
+    { "id": "p09", "name": "Avery Thompson",   "ageGroup": "U12", "contactEmail": null,                    "willingToCoach": false },
+    { "id": "p10", "name": "Drew Williams",    "ageGroup": "U12", "contactEmail": null,                    "willingToCoach": false },
+    { "id": "p11", "name": "Blake Santos",     "ageGroup": "U12", "contactEmail": "blake.s@example.com",  "willingToCoach": true  },
+    { "id": "p12", "name": "Reese Murphy",     "ageGroup": "U12", "contactEmail": null,                    "willingToCoach": false },
+    { "id": "p13", "name": "Quinn Garcia",     "ageGroup": "U12", "contactEmail": null,                    "willingToCoach": false },
+    { "id": "p14", "name": "Cameron Foster",   "ageGroup": "U12", "contactEmail": null,                    "willingToCoach": false },
+    { "id": "p15", "name": "Parker Reed",      "ageGroup": "U12", "contactEmail": null,                    "willingToCoach": false },
+    { "id": "p16", "name": "Skyler Ortiz",     "ageGroup": "U12", "contactEmail": null,                    "willingToCoach": false },
+    { "id": "p17", "name": "Finley Ross",      "ageGroup": "U12", "contactEmail": null,                    "willingToCoach": false },
+    { "id": "p18", "name": "Logan Nash",       "ageGroup": "U12", "contactEmail": null,                    "willingToCoach": false },
+    { "id": "p19", "name": "Hayden Price",     "ageGroup": "U12", "contactEmail": null,                    "willingToCoach": false },
+    { "id": "p20", "name": "Emerson Walsh",    "ageGroup": "U12", "contactEmail": null,                    "willingToCoach": false }
+  ],
+  "affinities": [
+    { "fromId": "p02", "toId": "p03", "weight": 1.0, "system": false },
+    { "fromId": "p04", "toId": "p05", "weight": 1.0, "system": false },
+    { "fromId": "p07", "toId": "p08", "weight": 1.0, "system": false },
+    { "fromId": "p12", "toId": "p13", "weight": 1.0, "system": false },
+    { "fromId": "p17", "toId": "p18", "weight": 1.0, "system": false },
+    { "fromId": "p19", "toId": "p20", "weight": 1.0, "system": false }
+  ],
+  "groups": [
+    {
+      "id": "g01",
+      "name": "Team 1",
+      "color": "#3B82F6",
+      "memberIds": ["p01", "p02", "p03", "p04", "p05"],
+      "headCoachId": "p01"
+    },
+    {
+      "id": "g02",
+      "name": "Team 2",
+      "color": "#8B5CF6",
+      "memberIds": ["p11", "p12", "p13", "p14", "p15"],
+      "headCoachId": "p11"
+    },
+    {
+      "id": "g03",
+      "name": "Team 3",
+      "color": "#F59E0B",
+      "memberIds": ["p06", "p07", "p08", "p09", "p10"],
+      "headCoachId": null
+    },
+    {
+      "id": "g04",
+      "name": "Team 4",
+      "color": "#10B981",
+      "memberIds": ["p16", "p17", "p18", "p19", "p20"],
+      "headCoachId": null
+    }
+  ],
+  "meta": {
+    "assignedBy": "algorithm",
+    "satisfactionScore": 1.0,
+    "coachCoverage": 2
+  }
+}

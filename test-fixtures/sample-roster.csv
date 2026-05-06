@@ -1,0 +1,19 @@
+name,age_group,contact_email,willing_to_coach
+Sarah Mitchell,U10,sarah.mitchell@example.com,true
+Jake Mitchell,U10,,false
+Carlos Rivera,U10,carlos.rivera@example.com,false
+Mia Chen,U10,,false
+Devon Patel,U10,devon.patel@example.com,true
+Aisha Okonkwo,U10,,false
+Tyler Brooks,U10,,false
+Emma Johansson,U10,emma.j@example.com,false
+Marcus Williams,U12,marcus.w@example.com,true
+Lily Williams,U12,,false
+Priya Sharma,U12,priya.s@example.com,false
+Noah Garcia,U12,,false
+Sofia Nguyen,U12,sofia.ng@example.com,false
+Ethan Park,U12,,false
+Rachel Kim,U12,rachel.k@example.com,true
+James Kim,U12,,false
+Olivia Thompson,U8,o.thompson@example.com,false
+Ben Thompson,U8,,false
