@@ -1,4 +1,4 @@
-# Togather — Product Requirements
+# toGather — Product Requirements
 
 `simplyinsilico.com/products/togather/`
 
@@ -10,13 +10,13 @@ _Version 1.0 | SimplyInsilico | V1 Stateless Release_
 
 ### 1.1 Purpose
 
-This document defines the product requirements for Togather — a group formation tool built and hosted under the Simply Insilico product umbrella. It establishes what the system must do, what it explicitly will not do, and the constraints it must operate within.
+This document defines the product requirements for toGather — a group formation tool built and hosted under the Simply Insilico product umbrella. It establishes what the system must do, what it explicitly will not do, and the constraints it must operate within.
 
 The companion document `architecture.md` describes how these requirements will be implemented. This document describes what must be true for the product to be considered complete.
 
 ### 1.2 Product Overview
 
-Togather helps league administrators, coaches, and organizers fairly divide a roster of participants into balanced groups. It maximizes friend co-placement, ensures every group is assigned a coach volunteer, and lets the administrator manually adjust the result before exporting.
+toGather helps league administrators, coaches, and organizers fairly divide a roster of participants into balanced groups. It maximizes friend co-placement, ensures every group is assigned a coach volunteer, and lets the administrator manually adjust the result before exporting.
 
 The v1 release is a stateless, session-based tool. No account is required. The administrator enters or imports their data, runs the algorithm, adjusts the result, and exports. When the browser session ends, the data is gone. Persistence is a v2 feature.
 
@@ -165,7 +165,7 @@ These items are candidates for v2 or later phases and must not be introduced dur
 | REQ-103 | The system must be fully functional in the latest stable versions of Chrome, Firefox, Safari, and Edge. |
 | REQ-104 | The Graph view must handle at least 200 participant nodes without significant performance degradation. |
 | REQ-105 | The application must be accessible at a minimum to WCAG 2.1 Level A. Drag-and-drop interactions must have a keyboard-accessible alternative. |
-| REQ-106 | The Togather tool must be hosted as part of the existing SimplyInsilico Next.js application — not as a separate deployment. |
+| REQ-106 | The toGather tool must be hosted as part of the existing SimplyInsilico Next.js application — not as a separate deployment. |
 
 ---
 

@@ -1,4 +1,4 @@
-# Togather — Design Document
+# toGather — Design Document
 
 `simplyinsilico.com/products/togather/`
 
@@ -10,7 +10,7 @@ _Version 1.0 | SimplyInsilico | V1 Stateless Release_
 
 ### 1.1 Purpose
 
-This document describes how Togather is designed — the user flows, screen layouts, component interfaces, state management structure, and API contract. It bridges the requirements document (what must be true) and the architecture document (which technologies are used) by specifying the concrete design decisions that implementation must follow.
+This document describes how toGather is designed — the user flows, screen layouts, component interfaces, state management structure, and API contract. It bridges the requirements document (what must be true) and the architecture document (which technologies are used) by specifying the concrete design decisions that implementation must follow.
 
 ### 1.2 Companion Documents
 
@@ -96,7 +96,7 @@ The landing page is a public marketing page within the existing SimplyInsilico s
 
 | Section | Content |
 |---|---|
-| Hero | Product name "Togather", tagline, "Launch Tool" CTA button |
+| Hero | Product name "toGather", tagline, "Launch Tool" CTA button |
 | Problem statement | Two or three sentences on the pain of manual team formation |
 | How it works | Three-step visual (Enter roster → Run algorithm → Export result) |
 | Feature highlights | Friendship-aware grouping, coach assignment, drag-and-drop adjustment, no account required |
@@ -116,7 +116,7 @@ All three app steps share a persistent shell:
 
 ```
 ┌─────────────────────────────────────────────────────┐
-│  Togather              [Session Name]          [?]  │  ← Top bar
+│  toGather              [Session Name]          [?]  │  ← Top bar
 ├──────────────────────────────────────────────────────┤
 │  ① Setup   ②  Participants   ③  Groups              │  ← Stepper
 ├──────────────────────────────────────────────────────┤
@@ -127,7 +127,7 @@ All three app steps share a persistent shell:
 ```
 
 **Top bar:**
-- Left: "Togather" wordmark (links back to landing page)
+- Left: "toGather" wordmark (links back to landing page)
 - Center: Session name (read-only display once set)
 - Right: Help icon (links to a tooltip or docs page)
 
@@ -165,7 +165,7 @@ All three app steps share a persistent shell:
 - "Next" is disabled until all three fields are valid
 - Number fields accept only positive integers; non-numeric input is rejected on blur
 - "Import previous session" opens a file picker filtered to `.json`; on successful parse, it bypasses steps 1 and 2 and navigates directly to the Groups view with full state restored
-- If JSON import fails to parse, display an inline error: "Could not read this file. Make sure it was exported from Togather."
+- If JSON import fails to parse, display an inline error: "Could not read this file. Make sure it was exported from toGather."
 
 ---
 
@@ -592,7 +592,7 @@ The client treats any network error or 5xx response as an endpoint unavailabilit
 | Scenario | UI Behavior |
 |---|---|
 | Session setup: non-numeric group count | Inline validation error on blur: "Must be a whole number greater than 0" |
-| Session setup: JSON import fails to parse | Inline error below import button: "Could not read this file. Make sure it was exported from Togather." |
+| Session setup: JSON import fails to parse | Inline error below import button: "Could not read this file. Make sure it was exported from toGather." |
 | Participants: CSV missing required columns | Modal listing missing columns; import is blocked until resolved |
 | Participants: duplicate participant name | Allow it — names are not unique keys. IDs are. |
 | Groups: algorithm endpoint unavailable | JS fallback runs silently; toast notifies user |
