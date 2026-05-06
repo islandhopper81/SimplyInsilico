@@ -1,4 +1,4 @@
-# Togather — Architecture Plan
+# toGather — Architecture Plan
 
 `simplyinsilico.com/products/togather/`
 
@@ -16,7 +16,7 @@ _Version 3.0 | SimplyInsilico | Stateless-first with stateful migration path_
 
 ## 2. Core Architecture Decision — Stateless First
 
-Togather v1 is a stateless, session-based tool. No database, no authentication, no backend persistence. The user enters or imports their data, runs the algorithm, adjusts the result, and exports. When the session ends, the state is gone.
+toGather v1 is a stateless, session-based tool. No database, no authentication, no backend persistence. The user enters or imports their data, runs the algorithm, adjusts the result, and exports. When the session ends, the state is gone.
 
 This is an intentional product decision, not a technical limitation. The right trigger to add persistence is a real user asking to come back to a saved session — not speculation before launch.
 
@@ -41,7 +41,7 @@ V1 adds only what is necessary. The existing SimplyInsilico stack is untouched.
 
 | Layer | Technology | Rationale |
 |---|---|---|
-| **Framework** | Next.js App Router + React 19 + TypeScript 5 | Togather is a new route in the existing repo — not a new app |
+| **Framework** | Next.js App Router + React 19 + TypeScript 5 | toGather is a new route in the existing repo — not a new app |
 | **Styling** | Tailwind CSS 4 + shadcn/ui | Consistent with rest of site |
 | **Animation** | Framer Motion 12 | Already installed — use for drag transitions |
 
@@ -110,7 +110,7 @@ When a participant marks `willingToCoach` as true, the system automatically crea
 ### Export Formats
 
 - **CSV** — one row per participant with their assigned group and coach assignment. Coach column included. For printing or importing into TeamSnap/GameChanger.
-- **JSON** — full session state including coach assignments. Can be re-imported into Togather in a future session. This is the v1 workaround for persistence.
+- **JSON** — full session state including coach assignments. Can be re-imported into toGather in a future session. This is the v1 workaround for persistence.
 
 ---
 
@@ -118,7 +118,7 @@ When a participant marks `willingToCoach` as true, the system automatically crea
 
 | Route | Purpose |
 |---|---|
-| `products/togather/` | Public landing page — what Togather is, call to action to launch the tool |
+| `products/togather/` | Public landing page — what toGather is, call to action to launch the tool |
 | `products/togather/app/` | Application shell — single-page tool, all state in Zustand |
 | `products/togather/app/setup` | Step 1 — session name, group count, max size |
 | `products/togather/app/participants` | Step 2 — enter or CSV-import participants, friend preferences, and coach volunteers |
@@ -197,7 +197,7 @@ Everything in V1 remains. These layers are added on top.
 
 ## 11. Repo Structure
 
-Togather lives inside the existing `simplyinsilico` repository. New directories only:
+toGather lives inside the existing `simplyinsilico` repository. New directories only:
 
 | Path | Purpose |
 |---|---|
@@ -207,4 +207,4 @@ Togather lives inside the existing `simplyinsilico` repository. New directories 
 | `src/lib/togather/` | Zustand store, type definitions, score calculator, CSV parser, export utilities |
 | `src/lib/togather/types.ts` | Shared TypeScript types — Session, Participant, Affinity, Group |
 | `algorithm/` | Python algorithm service — main.py, requirements.txt, deployable independently |
-| `prisma/` | Added in V2 only — schema.prisma with Togather tables |
+| `prisma/` | Added in V2 only — schema.prisma with toGather tables |

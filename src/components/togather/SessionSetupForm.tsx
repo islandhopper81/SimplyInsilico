@@ -112,7 +112,7 @@ export default function SessionSetupForm({ onSubmit, onImport }: SessionSetupFor
       } catch {
         setErrors((prev) => ({
           ...prev,
-          import: 'Could not read this file. Make sure it was exported from Togather.',
+          import: 'Could not read this file. Make sure it was exported from toGather.',
         }));
       }
     };

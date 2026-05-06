@@ -70,7 +70,7 @@ export default function TogatherLandingPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
-            Togather
+            toGather
           </motion.h1>
           <motion.p
             className="mt-6 text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed"
@@ -129,7 +129,7 @@ export default function TogatherLandingPage() {
             transition={{ duration: 0.5, delay: 0.2 }}
             viewport={{ once: true }}
           >
-            <span className="text-primary">Togather</span> solves it in minutes.
+            <span className="text-primary">toGather</span> solves it in minutes.
           </motion.p>
         </div>
       </section>

@@ -13,7 +13,7 @@ export default function AppTopBar() {
         href="/products/togather"
         className="text-lg font-bold text-foreground hover:text-primary transition-colors"
       >
-        Togather
+        toGather
       </Link>
 
       <span className="text-sm text-muted-foreground truncate max-w-xs">

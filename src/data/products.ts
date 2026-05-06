@@ -18,7 +18,7 @@ export const products: Product[] = [
     isExternal: true,
   },
   {
-    name: 'Togather',
+    name: 'toGather',
     tagline: 'Friendship-aware team formation for leagues and organizers.',
     imagePath: '/images/products/togather.jpg',
     url: '/products/togather',
