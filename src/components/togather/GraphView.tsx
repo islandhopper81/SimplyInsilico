@@ -22,17 +22,27 @@ async function getCytoscape(): Promise<typeof cytoscape> {
   return cytoscapeModule;
 }
 
+const BASE_RADIUS = 55;
+const PER_MEMBER_RADIUS = 10;
+const COMPOUND_PADDING = 28;
+const MAX_NODE_SIZE = 42; // coach diamond is the largest node at 42x42
+
 // Arrange each group's members in a circle around a cluster center.
 // Clusters are laid out in a grid so every group gets its own region.
+// Spacing is calculated dynamically from the actual max cluster diameter so
+// compound boxes never overlap regardless of league size.
 function buildPresetPositions(
   groups: Group[]
 ): Record<string, { x: number; y: number }> {
   const positions: Record<string, { x: number; y: number }> = {};
   const activeGroups = groups.filter((g) => g.memberIds.length > 0);
 
-  const CLUSTER_SPACING = 240;
-  const BASE_RADIUS = 55;
-  const PER_MEMBER_RADIUS = 10;
+  const maxMemberCount = activeGroups.reduce((max, g) => Math.max(max, g.memberIds.length), 0);
+  const maxOrbitRadius = Math.max(BASE_RADIUS, maxMemberCount * PER_MEMBER_RADIUS);
+  // Half-width of the largest compound node: orbit radius + node half-size + compound padding
+  const maxCompoundHalfWidth = maxOrbitRadius + MAX_NODE_SIZE / 2 + COMPOUND_PADDING;
+  const CLUSTER_SPACING = Math.max(280, 2 * maxCompoundHalfWidth + 80);
+
   const cols = Math.ceil(Math.sqrt(activeGroups.length));
 
   activeGroups.forEach((group, groupIdx) => {
@@ -157,13 +167,16 @@ export default function GraphView() {
               'border-width': 2,
               'border-opacity': 0.5,
               label: 'data(label)',
+              // text-valign 'top' positions the label at the compound's top boundary.
+              // text-margin-y shifts it down so it sits visibly inside the box.
               'text-valign': 'top',
               'text-halign': 'center',
+              'text-margin-y': 14,
               'font-size': '12px',
               'font-weight': 'bold',
               color: 'data(color)' as string,
               shape: 'roundrectangle',
-              padding: '28px',
+              padding: `${COMPOUND_PADDING}px`,
             },
           },
           {
@@ -274,6 +287,9 @@ export default function GraphView() {
           moveParticipant(participantId, closestGroupId);
         }
       });
+
+      // Zoom/pan to fit all clusters in the viewport with some breathing room
+      cy.ready(() => cy.fit(undefined, 40));
 
       cyRef.current = cy;
     });
