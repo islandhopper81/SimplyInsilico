@@ -1,4 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="18 24 110 112" width="110" height="112">
+import sharp from 'sharp';
+import { readFileSync, writeFileSync } from 'fs';
+import { resolve } from 'path';
+
+const publicDir = resolve(process.cwd(), 'public');
+
+const iconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="18 24 110 112" width="110" height="112">
   <defs>
     <style>
       .hub-center { fill: #0F6E56; }
@@ -25,4 +31,22 @@
   <circle cx="72" cy="80" r="22" class="hub-center" opacity="0.08"/>
   <circle cx="72" cy="80" r="13" class="hub-center" opacity="0.14"/>
   <circle cx="72" cy="80" r="7"  class="hub-center" opacity="1"/>
-</svg>
+</svg>`;
+
+// Write the icon SVG so it lives alongside the full logo
+writeFileSync(resolve(publicDir, 'logo-icon.svg'), iconSvg);
+console.log('Wrote public/logo-icon.svg');
+
+// Convert full logo — 2× scale (1040×320)
+const fullSvg = readFileSync(resolve(publicDir, 'logo-full.svg'));
+await sharp(fullSvg, { density: 192 })
+  .png()
+  .toFile(resolve(publicDir, 'logo-full.png'));
+console.log('Wrote public/logo-full.png  (1040×320 @2×)');
+
+// Convert icon — 256×256 (square, good for favicons / app icons)
+await sharp(Buffer.from(iconSvg), { density: 192 })
+  .resize(256, 256, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
+  .png()
+  .toFile(resolve(publicDir, 'logo-icon.png'));
+console.log('Wrote public/logo-icon.png  (256×256, transparent bg)');
