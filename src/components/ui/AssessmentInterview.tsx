@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import ReactMarkdown from 'react-markdown';
 import { ASSESSMENT_CONFIG } from '@/data/assessment';
 
 interface Message {
@@ -16,6 +17,7 @@ export default function AssessmentInterview() {
   const [isLoading, setIsLoading] = useState(false);
   const [phase, setPhase] = useState<Phase>('interview');
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
     async function fetchGreeting() {
@@ -44,6 +46,12 @@ export default function AssessmentInterview() {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
+
+  useEffect(() => {
+    if (!isLoading && phase === 'interview') {
+      inputRef.current?.focus();
+    }
+  }, [isLoading, phase]);
 
   async function handleSend() {
     if (!input.trim() || isLoading || phase !== 'interview') return;
@@ -94,13 +102,19 @@ export default function AssessmentInterview() {
             className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
           >
             <div
-              className={`max-w-[80%] rounded-xl px-4 py-3 text-sm leading-relaxed whitespace-pre-wrap ${
+              className={`max-w-[80%] rounded-xl px-4 py-3 text-sm leading-relaxed ${
                 message.role === 'user'
                   ? 'bg-primary text-white'
                   : 'bg-muted text-foreground'
               }`}
             >
-              {message.content}
+              {message.role === 'user' ? (
+                message.content
+              ) : (
+                <div className="prose prose-sm max-w-none prose-p:my-1 prose-headings:my-2">
+                  <ReactMarkdown>{message.content}</ReactMarkdown>
+                </div>
+              )}
             </div>
           </div>
         ))}
@@ -151,6 +165,7 @@ export default function AssessmentInterview() {
       {/* Input area */}
       <div className="flex gap-3">
         <textarea
+          ref={inputRef}
           value={input}
           onChange={(event) => setInput(event.target.value)}
           onKeyDown={handleKeyDown}
