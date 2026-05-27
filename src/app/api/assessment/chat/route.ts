@@ -68,11 +68,15 @@ export async function POST(request: NextRequest) {
 
   const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
+  const messages = body.messages.length === 0
+    ? [{ role: 'user' as const, content: 'Hello' }]
+    : body.messages;
+
   const response = await anthropic.messages.create({
     model: 'claude-sonnet-4-6',
     max_tokens: 2048,
     system: SYSTEM_PROMPT,
-    messages: body.messages,
+    messages,
   });
 
   const reply = response.content[0].type === 'text' ? response.content[0].text : '';

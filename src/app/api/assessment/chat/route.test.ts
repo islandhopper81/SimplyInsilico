@@ -65,6 +65,16 @@ describe('POST /api/assessment/chat', () => {
     expect(callArgs.system).toContain('[INTERVIEW_COMPLETE]');
   });
 
+  it('seeds a user message when messages array is empty', async () => {
+    mockCreate.mockResolvedValueOnce(makeAnthropicResponse('Hello! Welcome to the assessment.'));
+
+    const request = makeRequest({ messages: [] });
+    await POST(request);
+
+    const callArgs = mockCreate.mock.calls[0][0];
+    expect(callArgs.messages).toEqual([{ role: 'user', content: 'Hello' }]);
+  });
+
   it('returns isComplete: true when Claude reply contains [INTERVIEW_COMPLETE]', async () => {
     const replyWithComplete = `Thank you so much! Here is your transcript.
 ---TRANSCRIPT---
