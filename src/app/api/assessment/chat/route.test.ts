@@ -124,6 +124,23 @@ Email: jane@acme.com
     );
   });
 
+  it('includes verbatim conversation log in the email body', async () => {
+    const replyWithComplete = `---TRANSCRIPT---\nSummary\n---TRANSCRIPT---\n[INTERVIEW_COMPLETE]`;
+    mockCreate.mockResolvedValueOnce(makeAnthropicResponse(replyWithComplete));
+
+    const messages = [
+      { role: 'user', content: 'My name is Alice' },
+      { role: 'assistant', content: 'Nice to meet you, Alice!' },
+    ];
+    const request = makeRequest({ messages });
+    await POST(request);
+
+    const emailText = mockEmailSend.mock.calls[0][0].text as string;
+    expect(emailText).toContain('VERBATIM CONVERSATION');
+    expect(emailText).toContain('Client:\nMy name is Alice');
+    expect(emailText).toContain('Claude:\nNice to meet you, Alice!');
+  });
+
   it('does not call Resend when isComplete is false', async () => {
     mockCreate.mockResolvedValueOnce(makeAnthropicResponse('Tell me about your business.'));
 
