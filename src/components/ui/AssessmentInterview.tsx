@@ -18,6 +18,7 @@ export default function AssessmentInterview() {
   const [phase, setPhase] = useState<Phase>('interview');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const paymentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     async function fetchGreeting() {
@@ -50,6 +51,9 @@ export default function AssessmentInterview() {
   useEffect(() => {
     if (!isLoading && phase === 'interview') {
       inputRef.current?.focus();
+    }
+    if (phase === 'payment') {
+      paymentRef.current?.scrollIntoView({ behavior: 'smooth' });
     }
   }, [isLoading, phase]);
 
@@ -130,7 +134,7 @@ export default function AssessmentInterview() {
 
       {/* Payment CTA */}
       {phase === 'payment' && (
-        <div className="rounded-xl bg-primary/5 border border-primary/20 p-6 text-center">
+        <div ref={paymentRef} className="rounded-xl bg-primary/5 border border-primary/20 p-6 text-center">
           {ASSESSMENT_CONFIG.stripePaymentLink ? (
             <>
               <p className="text-foreground font-semibold mb-4">
