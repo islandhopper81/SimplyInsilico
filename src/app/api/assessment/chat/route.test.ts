@@ -132,4 +132,17 @@ Email: jane@acme.com
 
     expect(mockEmailSend).not.toHaveBeenCalled();
   });
+
+  it('still returns isComplete: true and 200 when Resend throws', async () => {
+    const replyWithComplete = `Thank you!\n---TRANSCRIPT---\nContent\n---TRANSCRIPT---\n[INTERVIEW_COMPLETE]`;
+    mockCreate.mockResolvedValueOnce(makeAnthropicResponse(replyWithComplete));
+    mockEmailSend.mockRejectedValueOnce(new Error('Resend domain not verified'));
+
+    const request = makeRequest({ messages: [{ role: 'user', content: 'done' }] });
+    const response = await POST(request);
+    const data = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(data.isComplete).toBe(true);
+  });
 });

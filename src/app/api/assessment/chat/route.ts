@@ -85,12 +85,17 @@ export async function POST(request: NextRequest) {
   if (isComplete) {
     const resend = new Resend(process.env.RESEND_API_KEY);
     const transcript = extractTranscript(reply);
-    await resend.emails.send({
-      from: 'noreply@simplyinsilico.com',
-      to: SCOTT_EMAIL,
-      subject: 'New Architecture Assessment Transcript',
-      text: transcript,
-    });
+    try {
+      await resend.emails.send({
+        from: 'noreply@simplyinsilico.com',
+        to: SCOTT_EMAIL,
+        subject: 'New Architecture Assessment Transcript',
+        text: transcript,
+      });
+    } catch (error) {
+      // Email failed — log transcript so it can be recovered from Vercel function logs
+      console.error('[assessment] Resend failed; transcript follows:\n', transcript, '\nError:', error);
+    }
   }
 
   return NextResponse.json({ reply, isComplete });
