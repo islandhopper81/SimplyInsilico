@@ -24,4 +24,11 @@ export const products: Product[] = [
     url: '/products/togather',
     isExternal: false,
   },
+  {
+    name: 'Cerebrum (proof of concept)',
+    tagline: 'LLM-powered mutation testing. Know if your tests actually work.',
+    imagePath: '/images/products/cerebrum.png',
+    url: '/products/cerebrum',
+    isExternal: false,
+  },
 ];
