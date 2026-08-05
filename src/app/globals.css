@@ -142,7 +142,7 @@
      don't dominate the post; width still scales down proportionally and never
      exceeds the content column. */
   .prose img {
-    max-height: 32rem;
+    max-height: 44rem;
     width: auto;
     max-width: 100%;
     object-fit: contain;
