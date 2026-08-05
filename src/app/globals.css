@@ -136,4 +136,17 @@
   html {
     @apply font-sans;
   }
+
+  /* Blog post images vary wildly in source aspect ratio (phone screenshots,
+     desktop screenshots, small gifs). Cap height so tall portrait screenshots
+     don't dominate the post; width still scales down proportionally and never
+     exceeds the content column. */
+  .prose img {
+    max-height: 32rem;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+    margin-left: auto;
+    margin-right: auto;
+  }
 }
