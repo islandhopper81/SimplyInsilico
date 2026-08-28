@@ -4,6 +4,7 @@ import AppStepper from '@/components/togather/AppStepper';
 
 export const metadata: Metadata = {
   title: 'toGather — Group Formation Tool',
+  robots: { index: false, follow: false },
 };
 
 export default function TogatherAppLayout({ children }: { children: React.ReactNode }) {
