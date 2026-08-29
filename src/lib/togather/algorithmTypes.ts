@@ -2,6 +2,8 @@ export interface AlgorithmRequest {
   session: {
     groupCount: number;
     maxGroupSize: number;
+    idealTeamSize?: number;
+    minTeamSize?: number;
   };
   participants: {
     id: string;

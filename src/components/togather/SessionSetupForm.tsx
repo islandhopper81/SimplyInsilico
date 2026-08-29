@@ -14,6 +14,8 @@ interface FormErrors {
   name?: string;
   groupCount?: string;
   maxGroupSize?: string;
+  idealTeamSize?: string;
+  minTeamSize?: string;
   import?: string;
 }
 
@@ -44,6 +46,8 @@ export default function SessionSetupForm({ onSubmit, onImport }: SessionSetupFor
   const [name, setName] = useState('');
   const [groupCount, setGroupCount] = useState('');
   const [maxGroupSize, setMaxGroupSize] = useState('');
+  const [idealTeamSize, setIdealTeamSize] = useState('');
+  const [minTeamSize, setMinTeamSize] = useState('');
   const [errors, setErrors] = useState<FormErrors>({});
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -74,25 +78,79 @@ export default function SessionSetupForm({ onSubmit, onImport }: SessionSetupFor
     return true;
   }
 
+  function validateIdealTeamSize(): boolean {
+    if (idealTeamSize.trim() === '') {
+      setErrors((prev) => ({ ...prev, idealTeamSize: undefined }));
+      return true;
+    }
+    const parsed = parsePositiveInteger(idealTeamSize);
+    if (parsed === null) {
+      setErrors((prev) => ({ ...prev, idealTeamSize: 'Must be a whole number greater than 0' }));
+      return false;
+    }
+    const maxParsed = parsePositiveInteger(maxGroupSize);
+    if (maxParsed !== null && parsed > maxParsed) {
+      setErrors((prev) => ({ ...prev, idealTeamSize: 'Must not exceed max participants per group' }));
+      return false;
+    }
+    setErrors((prev) => ({ ...prev, idealTeamSize: undefined }));
+    return true;
+  }
+
+  function validateMinTeamSize(): boolean {
+    if (minTeamSize.trim() === '') {
+      setErrors((prev) => ({ ...prev, minTeamSize: undefined }));
+      return true;
+    }
+    const parsed = parsePositiveInteger(minTeamSize);
+    if (parsed === null) {
+      setErrors((prev) => ({ ...prev, minTeamSize: 'Must be a whole number greater than 0' }));
+      return false;
+    }
+    const idealParsed = idealTeamSize.trim() !== '' ? parsePositiveInteger(idealTeamSize) : null;
+    const maxParsed = parsePositiveInteger(maxGroupSize);
+    const upperBound = idealParsed ?? maxParsed;
+    if (upperBound !== null && parsed > upperBound) {
+      setErrors((prev) => ({
+        ...prev,
+        minTeamSize: idealParsed !== null
+          ? 'Must not exceed ideal team size'
+          : 'Must not exceed max participants per group',
+      }));
+      return false;
+    }
+    setErrors((prev) => ({ ...prev, minTeamSize: undefined }));
+    return true;
+  }
+
   const isFormValid =
     name.trim().length > 0 &&
     parsePositiveInteger(groupCount) !== null &&
     parsePositiveInteger(maxGroupSize) !== null &&
     !errors.name &&
     !errors.groupCount &&
-    !errors.maxGroupSize;
+    !errors.maxGroupSize &&
+    !errors.idealTeamSize &&
+    !errors.minTeamSize;
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const nameValid = validateName();
     const groupCountValid = validateGroupCount();
     const maxGroupSizeValid = validateMaxGroupSize();
-    if (!nameValid || !groupCountValid || !maxGroupSizeValid) return;
+    const idealTeamSizeValid = validateIdealTeamSize();
+    const minTeamSizeValid = validateMinTeamSize();
+    if (!nameValid || !groupCountValid || !maxGroupSizeValid || !idealTeamSizeValid || !minTeamSizeValid) return;
+
+    const idealParsed = idealTeamSize.trim() !== '' ? parsePositiveInteger(idealTeamSize) ?? undefined : undefined;
+    const minParsed = minTeamSize.trim() !== '' ? parsePositiveInteger(minTeamSize) ?? undefined : undefined;
 
     onSubmit({
       name: name.trim(),
       groupCount: parsePositiveInteger(groupCount)!,
       maxGroupSize: parsePositiveInteger(maxGroupSize)!,
+      ...(idealParsed !== undefined && { idealTeamSize: idealParsed }),
+      ...(minParsed !== undefined && { minTeamSize: minParsed }),
     });
   }
 
@@ -193,6 +251,54 @@ export default function SessionSetupForm({ onSubmit, onImport }: SessionSetupFor
         {errors.maxGroupSize && (
           <p id="max-group-size-error" className="text-xs text-destructive" role="alert">
             {errors.maxGroupSize}
+          </p>
+        )}
+      </div>
+
+      {/* Ideal team size (optional) */}
+      <div className="space-y-1.5">
+        <label htmlFor="ideal-team-size" className="block text-sm font-medium text-foreground">
+          Ideal team size <span className="text-muted-foreground font-normal">(optional)</span>
+        </label>
+        <input
+          id="ideal-team-size"
+          type="text"
+          inputMode="numeric"
+          value={idealTeamSize}
+          onChange={(e) => setIdealTeamSize(e.target.value)}
+          onBlur={validateIdealTeamSize}
+          placeholder="6"
+          aria-describedby={errors.idealTeamSize ? 'ideal-team-size-error' : undefined}
+          aria-invalid={!!errors.idealTeamSize}
+          className="w-24 rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring aria-invalid:border-destructive"
+        />
+        {errors.idealTeamSize && (
+          <p id="ideal-team-size-error" className="text-xs text-destructive" role="alert">
+            {errors.idealTeamSize}
+          </p>
+        )}
+      </div>
+
+      {/* Minimum team size (optional) */}
+      <div className="space-y-1.5">
+        <label htmlFor="min-team-size" className="block text-sm font-medium text-foreground">
+          Minimum team size <span className="text-muted-foreground font-normal">(optional)</span>
+        </label>
+        <input
+          id="min-team-size"
+          type="text"
+          inputMode="numeric"
+          value={minTeamSize}
+          onChange={(e) => setMinTeamSize(e.target.value)}
+          onBlur={validateMinTeamSize}
+          placeholder="4"
+          aria-describedby={errors.minTeamSize ? 'min-team-size-error' : undefined}
+          aria-invalid={!!errors.minTeamSize}
+          className="w-24 rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring aria-invalid:border-destructive"
+        />
+        {errors.minTeamSize && (
+          <p id="min-team-size-error" className="text-xs text-destructive" role="alert">
+            {errors.minTeamSize}
           </p>
         )}
       </div>

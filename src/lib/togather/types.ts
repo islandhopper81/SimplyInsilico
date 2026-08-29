@@ -2,6 +2,8 @@ export interface Session {
   name: string;
   groupCount: number;
   maxGroupSize: number;
+  idealTeamSize?: number;
+  minTeamSize?: number;
 }
 
 export interface Participant {

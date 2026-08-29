@@ -123,6 +123,83 @@ describe('SessionSetupForm', () => {
 
       expect(onSubmit).toHaveBeenCalledWith(expect.objectContaining({ name: 'Spring 2025' }));
     });
+
+    it('includes idealTeamSize and minTeamSize in submission when provided', () => {
+      const onSubmit = vi.fn();
+      render(<SessionSetupForm onSubmit={onSubmit} onImport={vi.fn()} />);
+      fillForm('Spring 2025', '6', '8');
+      fireEvent.change(screen.getByLabelText(/Ideal team size/), { target: { value: '7' } });
+      fireEvent.change(screen.getByLabelText(/Minimum team size/), { target: { value: '4' } });
+      submit();
+
+      expect(onSubmit).toHaveBeenCalledWith({
+        name: 'Spring 2025',
+        groupCount: 6,
+        maxGroupSize: 8,
+        idealTeamSize: 7,
+        minTeamSize: 4,
+      });
+    });
+
+    it('omits idealTeamSize and minTeamSize when left empty', () => {
+      const onSubmit = vi.fn();
+      render(<SessionSetupForm onSubmit={onSubmit} onImport={vi.fn()} />);
+      fillForm('Spring 2025', '6', '8');
+      submit();
+
+      expect(onSubmit).toHaveBeenCalledWith({ name: 'Spring 2025', groupCount: 6, maxGroupSize: 8 });
+      expect(onSubmit.mock.calls[0][0]).not.toHaveProperty('idealTeamSize');
+      expect(onSubmit.mock.calls[0][0]).not.toHaveProperty('minTeamSize');
+    });
+  });
+
+  describe('optional field validation', () => {
+    it('renders ideal team size and minimum team size fields', () => {
+      render(<SessionSetupForm onSubmit={vi.fn()} onImport={vi.fn()} />);
+      expect(screen.getByLabelText(/Ideal team size/)).toBeInTheDocument();
+      expect(screen.getByLabelText(/Minimum team size/)).toBeInTheDocument();
+    });
+
+    it('shows an error when ideal team size exceeds max group size', async () => {
+      render(<SessionSetupForm onSubmit={vi.fn()} onImport={vi.fn()} />);
+      fireEvent.change(screen.getByLabelText(/Max participants per group/), { target: { value: '8' } });
+      fireEvent.change(screen.getByLabelText(/Ideal team size/), { target: { value: '10' } });
+      fireEvent.blur(screen.getByLabelText(/Ideal team size/));
+      expect(await screen.findByText(/Must not exceed max participants per group/i)).toBeInTheDocument();
+    });
+
+    it('shows an error when ideal team size is not a positive integer', async () => {
+      render(<SessionSetupForm onSubmit={vi.fn()} onImport={vi.fn()} />);
+      fireEvent.change(screen.getByLabelText(/Ideal team size/), { target: { value: 'abc' } });
+      fireEvent.blur(screen.getByLabelText(/Ideal team size/));
+      expect(await screen.findByText(/whole number greater than 0/i)).toBeInTheDocument();
+    });
+
+    it('shows an error when min team size exceeds ideal team size', async () => {
+      render(<SessionSetupForm onSubmit={vi.fn()} onImport={vi.fn()} />);
+      fireEvent.change(screen.getByLabelText(/Ideal team size/), { target: { value: '6' } });
+      fireEvent.change(screen.getByLabelText(/Minimum team size/), { target: { value: '8' } });
+      fireEvent.blur(screen.getByLabelText(/Minimum team size/));
+      expect(await screen.findByText(/Must not exceed ideal team size/i)).toBeInTheDocument();
+    });
+
+    it('shows an error when min team size exceeds max group size when ideal is not set', async () => {
+      render(<SessionSetupForm onSubmit={vi.fn()} onImport={vi.fn()} />);
+      fireEvent.change(screen.getByLabelText(/Max participants per group/), { target: { value: '8' } });
+      fireEvent.change(screen.getByLabelText(/Minimum team size/), { target: { value: '10' } });
+      fireEvent.blur(screen.getByLabelText(/Minimum team size/));
+      expect(await screen.findByText(/Must not exceed max participants per group/i)).toBeInTheDocument();
+    });
+
+    it('accepts valid optional field values without error', async () => {
+      render(<SessionSetupForm onSubmit={vi.fn()} onImport={vi.fn()} />);
+      fireEvent.change(screen.getByLabelText(/Max participants per group/), { target: { value: '10' } });
+      fireEvent.change(screen.getByLabelText(/Ideal team size/), { target: { value: '8' } });
+      fireEvent.blur(screen.getByLabelText(/Ideal team size/));
+      fireEvent.change(screen.getByLabelText(/Minimum team size/), { target: { value: '5' } });
+      fireEvent.blur(screen.getByLabelText(/Minimum team size/));
+      expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+    });
   });
 
   describe('JSON import', () => {
