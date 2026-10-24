@@ -5,21 +5,23 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import PulseAccent from '@/components/sections/PulseAccent';
 
 export default function HeroSection() {
   return (
     <section className="relative overflow-hidden bg-gradient-to-br from-[#9FE1CB]/30 via-[#9FE1CB]/10 to-white py-24 sm:py-32">
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
 
         {/* Logo icon */}
         <motion.div
-          className="flex justify-center mb-6"
+          className="relative flex justify-center mb-6"
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <Image src="/logo-icon.svg" alt="" width={96} height={96} aria-hidden="true" />
+          <PulseAccent />
+          <Image src="/logo-icon.svg" alt="" width={96} height={96} aria-hidden="true" className="relative" />
         </motion.div>
 
         {/* Eyebrow tagline */}
