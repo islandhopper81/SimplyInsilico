@@ -2,21 +2,13 @@
 
 import { motion, useReducedMotion } from 'framer-motion';
 
-const PULSE_RING_COUNT = 2;
-const PULSE_DURATION_SECONDS = 2.2;
-const PULSE_STAGGER_SECONDS = 0.8;
-const PULSE_MAX_SCALE = 1.3;
+const GLOW_RING_COUNT = 2;
+const GLOW_DURATION_SECONDS = 2.8;
+const GLOW_STAGGER_SECONDS = 1;
 
-type Orbit = {
-  diameterPercent: number;
-  rotationDurationSeconds: number;
-  direction: 1 | -1;
-  dotSizeClass: string;
-};
-
-const ORBITS: Orbit[] = [
-  { diameterPercent: 62, rotationDurationSeconds: 7, direction: 1, dotSizeClass: 'h-2 w-2' },
-  { diameterPercent: 92, rotationDurationSeconds: 11, direction: -1, dotSizeClass: 'h-2.5 w-2.5' },
+const ACCENT_DOTS = [
+  { top: '22%', left: '16%', sizeClass: 'h-2 w-2', delaySeconds: 0 },
+  { top: '70%', left: '20%', sizeClass: 'h-1.5 w-1.5', delaySeconds: 0.7 },
 ];
 
 export default function PulseAccent() {
@@ -27,52 +19,49 @@ export default function PulseAccent() {
       className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center"
       aria-hidden="true"
     >
-      <div className="relative h-44 w-44 sm:h-52 sm:w-52">
+      <div className="relative h-32 w-32 sm:h-40 sm:w-40">
         {!shouldReduceMotion &&
-          Array.from({ length: PULSE_RING_COUNT }).map((_, ringIndex) => (
+          Array.from({ length: GLOW_RING_COUNT }).map((_, ringIndex) => (
             <motion.span
               key={ringIndex}
-              className="absolute inset-0 rounded-full border-2 border-primary/60"
-              initial={{ opacity: 0.8, scale: 0.3 }}
-              animate={{ opacity: 0, scale: PULSE_MAX_SCALE }}
+              className="absolute inset-0 rounded-full bg-primary/25 blur-md"
+              initial={{ opacity: 0.45, scale: 0.4 }}
+              animate={{ opacity: 0, scale: 1.1 }}
               transition={{
-                duration: PULSE_DURATION_SECONDS,
+                duration: GLOW_DURATION_SECONDS,
                 repeat: Infinity,
                 ease: 'easeOut',
-                delay: ringIndex * PULSE_STAGGER_SECONDS,
+                delay: ringIndex * GLOW_STAGGER_SECONDS,
               }}
             />
           ))}
 
-        {ORBITS.map((orbit, orbitIndex) => (
-          <div
-            key={orbitIndex}
-            className="absolute left-1/2 top-1/2 rounded-full border border-primary/25"
-            style={{
-              width: `${orbit.diameterPercent}%`,
-              height: `${orbit.diameterPercent}%`,
-              transform: 'translate(-50%, -50%)',
-            }}
-          >
-            <motion.div
-              className="absolute inset-0"
-              animate={shouldReduceMotion ? undefined : { rotate: 360 * orbit.direction }}
-              transition={{
-                duration: orbit.rotationDurationSeconds,
-                repeat: Infinity,
-                ease: 'linear',
-              }}
-            >
-              <span
-                className={`absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary ${orbit.dotSizeClass}`}
-              />
-            </motion.div>
-          </div>
-        ))}
-
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className="h-3.5 w-3.5 rounded-full bg-primary shadow-[0_0_12px_rgba(16,122,89,0.5)]" />
+          <span className="h-3 w-3 rounded-full bg-primary shadow-[0_0_10px_rgba(16,122,89,0.45)]" />
         </div>
+
+        {ACCENT_DOTS.map((dot, dotIndex) =>
+          shouldReduceMotion ? (
+            <span
+              key={dotIndex}
+              className={`absolute rounded-full bg-primary/60 ${dot.sizeClass}`}
+              style={{ top: dot.top, left: dot.left }}
+            />
+          ) : (
+            <motion.span
+              key={dotIndex}
+              className={`absolute rounded-full bg-primary/60 ${dot.sizeClass}`}
+              style={{ top: dot.top, left: dot.left }}
+              animate={{ opacity: [0.3, 1, 0.3] }}
+              transition={{
+                duration: 2.4,
+                repeat: Infinity,
+                ease: 'easeInOut',
+                delay: dot.delaySeconds,
+              }}
+            />
+          )
+        )}
       </div>
     </div>
   );
