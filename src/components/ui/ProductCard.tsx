@@ -18,6 +18,9 @@ export default function ProductCard({ product }: ProductCardProps) {
         />
       </div>
       <div className="flex-1 p-6">
+        {product.status && (
+          <p className="mb-3 inline-block rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">{product.status}</p>
+        )}
         <h3 className="text-xl font-semibold text-foreground mb-2">{product.name}</h3>
         <p className="text-muted-foreground leading-relaxed">{product.tagline}</p>
         <p className="mt-4 text-sm font-medium text-primary group-hover:text-[#1D9E75] transition-colors">
