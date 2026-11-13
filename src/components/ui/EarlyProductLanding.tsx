@@ -19,8 +19,12 @@ export default function EarlyProductLanding({ product }: { product: EarlyProduct
               <p className="mt-3 text-sm text-muted-foreground">An early look. Not yet widely available.</p>
             </div>
             <div>
-              <Image src={product.imagePath} alt="" width={720} height={480} priority className="w-full rounded-2xl border border-primary/10" />
-              <p className="mt-3 text-center text-xs text-muted-foreground">Illustration of the idea, not a product screenshot.</p>
+              <Image src={product.imagePath} alt={product.imageAlt ?? ""} width={720} height={480} priority className="w-full rounded-2xl border border-primary/10" />
+              {product.photoCredit ? (
+                <p className="mt-3 text-center text-xs text-muted-foreground">Photo by <a href={product.photoCredit.url} target="_blank" rel="noopener noreferrer" className="underline">{product.photoCredit.name} on Unsplash</a></p>
+              ) : (
+                <p className="mt-3 text-center text-xs text-muted-foreground">Illustration of the idea, not a product screenshot.</p>
+              )}
             </div>
           </div>
         </div>
@@ -38,6 +42,23 @@ export default function EarlyProductLanding({ product }: { product: EarlyProduct
           ))}
         </div>
       </section>
+      {product.plannedFeatures && (
+        <section className="border-t border-border bg-primary/5 px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
+          <div className="mx-auto max-w-6xl">
+            <p className="mb-4 text-xs font-semibold uppercase tracking-[0.15em] text-primary">Planned · Parent communication</p>
+            <h2 className="text-3xl font-bold tracking-tight">Keep parents in the loop.</h2>
+            <p className="mt-4 max-w-2xl text-lg text-muted-foreground">We’re exploring ways to make communication with families part of Line Change. These features are planned and aren’t available yet.</p>
+            <div className="mt-10 grid gap-8 md:grid-cols-3">
+              {product.plannedFeatures.map((feature) => (
+                <div key={feature.title}>
+                  <h3 className="text-xl font-semibold">{feature.title}</h3>
+                  <p className="mt-3 leading-relaxed text-muted-foreground">{feature.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
       <section id="interest" className="scroll-mt-24 bg-muted/40 px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
         <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-2 lg:gap-20">
           <div>
