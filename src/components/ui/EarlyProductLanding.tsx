@@ -23,7 +23,7 @@ export default function EarlyProductLanding({ product }: { product: EarlyProduct
                 <Image src={product.imagePath} alt={product.imageAlt ?? ""} width={product.screenshot ? 940 : 720} height={product.screenshot ? 1672 : 480} sizes={product.screenshot ? '(max-width: 640px) 85vw, 320px' : '(max-width: 1024px) 100vw, 540px'} priority className={product.screenshot ? 'mx-auto h-auto w-full max-w-[320px] rounded-2xl border border-border shadow-xl' : 'h-auto w-full rounded-2xl border border-primary/10'} />
               </a>
               {product.screenshot ? (
-                <p className="mt-3 text-center text-xs text-muted-foreground">Line Change · Lineup view. Fictional player names; image edited for privacy. Select image to view full size.</p>
+                <p className="mt-3 text-center text-xs text-muted-foreground">{product.screenshotCaption ?? 'Line Change · Lineup view. Fictional player names; image edited for privacy.'} Select image to view full size.</p>
               ) : product.photoCredit ? (
                 <p className="mt-3 text-center text-xs text-muted-foreground">Photo by <a href={product.photoCredit.url} target="_blank" rel="noopener noreferrer" className="underline">{product.photoCredit.name} on Unsplash</a></p>
               ) : (
@@ -46,6 +46,32 @@ export default function EarlyProductLanding({ product }: { product: EarlyProduct
           ))}
         </div>
       </section>
+      {product.giftStatuses && (
+        <section className="bg-primary/5 px-4 py-12 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-6xl">
+            <h2 className="text-2xl font-bold">From a good idea to a gift given.</h2>
+            <ol className="mt-6 flex flex-wrap gap-3" aria-label="Gift status workflow">
+              {product.giftStatuses.map((status, index) => <li key={status} className="rounded-full border border-primary/20 bg-white px-4 py-2 text-sm font-medium"><span className="mr-2 text-primary">{index + 1}.</span>{status}</li>)}
+            </ol>
+          </div>
+        </section>
+      )}
+      {product.gallery?.map((item) => (
+        <section key={item.imagePath} className="border-t border-border px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
+          <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-2">
+            <div>
+              <h2 className="text-3xl font-bold tracking-tight">{item.title}</h2>
+              <p className="mt-5 max-w-lg text-lg leading-relaxed text-muted-foreground">{item.description}</p>
+            </div>
+            <figure>
+              <a href={item.imagePath} target="_blank" rel="noopener noreferrer" aria-label={`View ${item.title} screenshot full size`} className="block rounded-2xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary">
+                <Image src={item.imagePath} alt={item.alt} width={940} height={1672} sizes="(max-width: 640px) 85vw, 375px" className="mx-auto h-auto w-full max-w-[375px] rounded-2xl border border-border shadow-lg" />
+              </a>
+              <figcaption className="mt-4 text-center text-xs text-muted-foreground">Fictional names; image edited for privacy. Select image to view full size.</figcaption>
+            </figure>
+          </div>
+        </section>
+      ))}
       {product.report && (
         <section className="border-t border-border px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
           <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-2">

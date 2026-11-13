@@ -6,6 +6,9 @@ export interface EarlyProduct {
   imagePath: string;
   imageAlt?: string;
   screenshot?: boolean;
+  screenshotCaption?: string;
+  giftStatuses?: string[];
+  gallery?: { imagePath: string; title: string; description: string; alt: string }[];
   report?: { imagePath: string; heading: string; description: string; alt: string };
   photoCredit?: { name: string; url: string };
   plannedFeatures?: { title: string; description: string }[];
@@ -42,14 +45,22 @@ export const lineChange: EarlyProduct = {
 
 export const givingGuru: EarlyProduct = {
   name: 'The Giving Guru',
-  headline: 'Thoughtful gifts. A little less juggling.',
-  description: 'Bring family gift ideas, plans, and purchases together so birthdays and holidays take fewer messages, fewer spreadsheets, and fewer duplicate gifts.',
+  headline: 'Coordinate the gifts equally.',
+  description: 'Save ideas for gifts you want to receive or give, bring in details from webpages, and keep every gift organized from the first idea to the moment it’s given.',
   audience: 'For parents coordinating gifts with partners, grandparents, and the rest of the family.',
-  imagePath: '/images/products/the-giving-guru.svg',
+  imagePath: '/images/products/giving-guru-ideas.png',
+  screenshot: true,
+  imageAlt: 'The Giving Guru gift ideas list with fictional names, gift details, and claim controls.',
+  screenshotCaption: 'The Giving Guru · Gift ideas. Fictional names; image edited for privacy.',
+  giftStatuses: ['Idea', 'Claimed', 'Purchased', 'Received', 'Wrapped', 'Given'],
+  gallery: [
+    { imagePath: '/images/products/giving-guru-events.png', title: 'See the balance across your family.', description: 'Bring upcoming occasions together and compare gift counts or spending across recipients, so you can decide what feels fair.', alt: 'Privacy-edited Events screen comparing gift counts for fictional family members.' },
+    { imagePath: '/images/products/giving-guru-dashboard.png', title: 'Know who’s giving what.', description: 'See what’s claimed, how much has been spent, and who each person’s gifts are coming from, all within the occasion you’re planning.', alt: 'Privacy-edited birthday dashboard showing claimed gifts, spending, and gift-giver distribution.' },
+  ],
   features: [
-    { title: 'Get everyone on the same list', description: 'Organize ideas by occasion and recipient, and coordinate who is buying what before two people pick the same gift.' },
-    { title: 'Keep the surprise intact', description: 'Designed to keep gifts hidden from their recipient while the family coordinates behind the scenes.' },
-    { title: 'Keep the bigger picture in view', description: 'Follow gifts from idea to given, and compare gift counts and spending across children.' },
+    { title: 'Keep ideas for giving and receiving', description: 'Build your own wish list and save ideas for other people. Keep inspiration ready before it belongs to a birthday or holiday.' },
+    { title: 'Save from a webpage', description: 'Send a product link into the app to capture gift details without retyping. Price and a picture are parsed automatically when the webpage provides them; review and fill in anything missing.' },
+    { title: 'Track every gift’s progress', description: 'Manage gifts like inventory: see what’s still an idea, who has claimed it, and what’s purchased, received, wrapped, or given.' },
   ],
   feedbackPrompt: 'How does your family coordinate gifts today, and what would make it easier?',
 };
