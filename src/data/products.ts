@@ -43,7 +43,7 @@ export const products: Product[] = [
   {
     name: 'The Giving Guru',
     tagline: 'Coordinate the gifts equally.',
-    imagePath: '/images/products/the-giving-guru.svg',
+    imagePath: '/images/products/giving-guru-gift-organizer.png',
     url: '/products/the-giving-guru',
     isExternal: false,
     status: 'In development',
