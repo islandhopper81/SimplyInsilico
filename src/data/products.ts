@@ -35,7 +35,7 @@ export const products: Product[] = [
   {
     name: 'Line Change',
     tagline: 'More coaching. A simpler way to manage substitutions and fair playing time.',
-    imagePath: '/images/products/line-change-coaching-illustration.png',
+    imagePath: '/images/products/line-change-coaching.jpg',
     url: '/products/line-change',
     isExternal: false,
     status: 'In development',
