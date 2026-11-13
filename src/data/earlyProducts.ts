@@ -5,6 +5,8 @@ export interface EarlyProduct {
   audience: string;
   imagePath: string;
   imageAlt?: string;
+  screenshot?: boolean;
+  report?: { imagePath: string; heading: string; description: string; alt: string };
   photoCredit?: { name: string; url: string };
   plannedFeatures?: { title: string; description: string }[];
   features: { title: string; description: string }[];
@@ -16,9 +18,15 @@ export const lineChange: EarlyProduct = {
   headline: 'More coaching.',
   description: 'A simpler way for youth sports coaches to keep track of substitutions and fair playing time.',
   audience: 'For volunteer coaches with a full bench and a lot to keep track of.',
-  imagePath: '/images/products/line-change-coaching.jpg',
-  imageAlt: 'A coach leading children through a running drill on a grassy field.',
-  photoCredit: { name: 'Aleksandar Andreev', url: 'https://unsplash.com/photos/a-group-of-people-running-around-a-field-x6K7_P5wymY' },
+  imagePath: '/images/products/line-change-lineup.png',
+  screenshot: true,
+  report: {
+    imagePath: '/images/products/line-change-report.png',
+    heading: 'See how playing time adds up.',
+    description: 'Review each player’s minutes after the game, with offense and defense time shown side by side. Use the breakdown to spot differences and plan for the next game.',
+    alt: 'Line Change game report comparing player minutes with orange offense and blue defense bars.',
+  },
+  imageAlt: 'Line Change lineup showing players on offense, defense, and the bench with minutes played.',
   plannedFeatures: [
     { title: 'Weather updates', description: 'Let families know about weather-related changes and cancellations.' },
     { title: 'Game reminders', description: 'Help parents keep track of upcoming games and arrival details.' },

@@ -19,8 +19,12 @@ export default function EarlyProductLanding({ product }: { product: EarlyProduct
               <p className="mt-3 text-sm text-muted-foreground">An early look. Not yet widely available.</p>
             </div>
             <div>
-              <Image src={product.imagePath} alt={product.imageAlt ?? ""} width={720} height={480} priority className="w-full rounded-2xl border border-primary/10" />
-              {product.photoCredit ? (
+              <a href={product.imagePath} target="_blank" rel="noopener noreferrer" aria-label={`View ${product.name} image full size`} className="block rounded-2xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary">
+                <Image src={product.imagePath} alt={product.imageAlt ?? ""} width={product.screenshot ? 750 : 720} height={product.screenshot ? 1334 : 480} sizes={product.screenshot ? '(max-width: 640px) 85vw, 320px' : '(max-width: 1024px) 100vw, 540px'} priority className={product.screenshot ? 'mx-auto h-auto w-full max-w-[320px] rounded-2xl border border-border shadow-xl' : 'h-auto w-full rounded-2xl border border-primary/10'} />
+              </a>
+              {product.screenshot ? (
+                <p className="mt-3 text-center text-xs text-muted-foreground">Line Change · Lineup view. Select image to view full size.</p>
+              ) : product.photoCredit ? (
                 <p className="mt-3 text-center text-xs text-muted-foreground">Photo by <a href={product.photoCredit.url} target="_blank" rel="noopener noreferrer" className="underline">{product.photoCredit.name} on Unsplash</a></p>
               ) : (
                 <p className="mt-3 text-center text-xs text-muted-foreground">Illustration of the idea, not a product screenshot.</p>
@@ -42,6 +46,23 @@ export default function EarlyProductLanding({ product }: { product: EarlyProduct
           ))}
         </div>
       </section>
+      {product.report && (
+        <section className="border-t border-border px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
+          <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-2">
+            <div>
+              <p className="mb-4 text-xs font-semibold uppercase tracking-[0.15em] text-primary">After the final whistle</p>
+              <h2 className="text-3xl font-bold tracking-tight">{product.report.heading}</h2>
+              <p className="mt-5 max-w-lg text-lg leading-relaxed text-muted-foreground">{product.report.description}</p>
+            </div>
+            <figure>
+              <a href={product.report.imagePath} target="_blank" rel="noopener noreferrer" aria-label="View game report screenshot full size" className="block rounded-2xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary">
+                <Image src={product.report.imagePath} alt={product.report.alt} width={750} height={1334} sizes="(max-width: 640px) 85vw, 375px" className="mx-auto h-auto w-full max-w-[375px] rounded-2xl border border-border shadow-lg" />
+              </a>
+              <figcaption className="mt-4 text-center text-xs text-muted-foreground">Line Change · Game report. Select image to view full size.</figcaption>
+            </figure>
+          </div>
+        </section>
+      )}
       {product.plannedFeatures && (
         <section className="border-t border-border bg-primary/5 px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
           <div className="mx-auto max-w-6xl">
