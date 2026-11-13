@@ -20,10 +20,10 @@ export default function EarlyProductLanding({ product }: { product: EarlyProduct
             </div>
             <div>
               <a href={product.imagePath} target="_blank" rel="noopener noreferrer" aria-label={`View ${product.name} image full size`} className="block rounded-2xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary">
-                <Image src={product.imagePath} alt={product.imageAlt ?? ""} width={product.screenshot ? 750 : 720} height={product.screenshot ? 1334 : 480} sizes={product.screenshot ? '(max-width: 640px) 85vw, 320px' : '(max-width: 1024px) 100vw, 540px'} priority className={product.screenshot ? 'mx-auto h-auto w-full max-w-[320px] rounded-2xl border border-border shadow-xl' : 'h-auto w-full rounded-2xl border border-primary/10'} />
+                <Image src={product.imagePath} alt={product.imageAlt ?? ""} width={product.screenshot ? 940 : 720} height={product.screenshot ? 1672 : 480} sizes={product.screenshot ? '(max-width: 640px) 85vw, 320px' : '(max-width: 1024px) 100vw, 540px'} priority className={product.screenshot ? 'mx-auto h-auto w-full max-w-[320px] rounded-2xl border border-border shadow-xl' : 'h-auto w-full rounded-2xl border border-primary/10'} />
               </a>
               {product.screenshot ? (
-                <p className="mt-3 text-center text-xs text-muted-foreground">Line Change · Lineup view. Select image to view full size.</p>
+                <p className="mt-3 text-center text-xs text-muted-foreground">Line Change · Lineup view. Fictional player names; image edited for privacy. Select image to view full size.</p>
               ) : product.photoCredit ? (
                 <p className="mt-3 text-center text-xs text-muted-foreground">Photo by <a href={product.photoCredit.url} target="_blank" rel="noopener noreferrer" className="underline">{product.photoCredit.name} on Unsplash</a></p>
               ) : (
@@ -56,9 +56,9 @@ export default function EarlyProductLanding({ product }: { product: EarlyProduct
             </div>
             <figure>
               <a href={product.report.imagePath} target="_blank" rel="noopener noreferrer" aria-label="View game report screenshot full size" className="block rounded-2xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary">
-                <Image src={product.report.imagePath} alt={product.report.alt} width={750} height={1334} sizes="(max-width: 640px) 85vw, 375px" className="mx-auto h-auto w-full max-w-[375px] rounded-2xl border border-border shadow-lg" />
+                <Image src={product.report.imagePath} alt={product.report.alt} width={940} height={1672} sizes="(max-width: 640px) 85vw, 375px" className="mx-auto h-auto w-full max-w-[375px] rounded-2xl border border-border shadow-lg" />
               </a>
-              <figcaption className="mt-4 text-center text-xs text-muted-foreground">Line Change · Game report. Select image to view full size.</figcaption>
+              <figcaption className="mt-4 text-center text-xs text-muted-foreground">Line Change · Game report. Fictional player names; image edited for privacy. Select image to view full size.</figcaption>
             </figure>
           </div>
         </section>
