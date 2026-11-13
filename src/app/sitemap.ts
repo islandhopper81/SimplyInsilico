@@ -54,6 +54,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'yearly',
       priority: 0.5,
     },
+    ...['line-change', 'the-giving-guru'].map((slug) => ({
+      url: `${BASE_URL}/products/${slug}`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.7,
+    })),
     ...blogPosts,
   ];
 }

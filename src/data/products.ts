@@ -7,6 +7,7 @@ export interface Product {
   imagePath: string;
   url: string;
   isExternal: boolean;
+  status?: 'In development';
 }
 
 export const products: Product[] = [
@@ -30,5 +31,21 @@ export const products: Product[] = [
     imagePath: '/images/products/cerebrum.png',
     url: '/products/cerebrum',
     isExternal: false,
+  },
+  {
+    name: 'Line Change',
+    tagline: 'Fair playing time. Fewer sideline distractions.',
+    imagePath: '/images/products/line-change.svg',
+    url: '/products/line-change',
+    isExternal: false,
+    status: 'In development',
+  },
+  {
+    name: 'The Giving Guru',
+    tagline: 'Coordinate the gifts. Keep the surprises.',
+    imagePath: '/images/products/the-giving-guru.svg',
+    url: '/products/the-giving-guru',
+    isExternal: false,
+    status: 'In development',
   },
 ];
